@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activar Usuario</title>
+    <style>
+        :root {
+            --btn-color: #0d774e;
+            --font-gray: #4b4b4b;
+            --card-padding-bottom: 8px;
+            --card-border-bottom: 1px solid #b1b1b1
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        body {
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            max-width: 90%;
+            width: 400px;
+            box-shadow: 5px 3px 13px 2px #292828;
+            padding: 14px 14px;
+            border-radius: 12px;
+        }
+        .card-header {
+            color: #242424;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #b1b1b1
+        }
+        .card-header .subtitle {
+            font-size: 13px;
+            color: #4b4b4b;
+        }
+        .card-body {
+            padding-top: 12px;
+            padding-bottom: 8px
+        }
+        .card-body h3 {
+            margin: 5px 0;
+            color: #4b4b4b;
+        }
+        .card-body p {
+            text-align: justify;
+        }
+        .card-links {
+            padding-bottom:  8px;
+            border-bottom: 1px solid #b1b1b1;
+        }
+        .card-footer, .card-links {
+            padding-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn {
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 2px solid #0d774e;
+            background-color: #0d774e;
+            font-size: xx-large;
+            color: #fff;
+            transition: all .2s;
+            font-weight: bolder;
+            max-width: 100%;
+            width: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn:hover {
+            background-color: #fff;
+            color: #0d774e;
+        }
+        .card-footer p {
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <h1 class="title">Reportes TIC</h1>
+            <h2 class="subtitle">Activación de cuenta de usuario</h2>
+        </div>
+        <div class="card-body">
+            <h3>
+                Estimado {{name}},
+            </h3>
+            <p>
+                ¡Bienvenido a nuestra plataforma! Estamos encantados de que hayas decidido unirte a nuestra comunidad!
+                Haz click aquí 👇 abajo en el siguiente botón para verificar y activar tu cuenta.
+            </p>
+        </div>
+        <div class="card-links">
+            <a href="https://localhost:5173/auth/active?code={{code}}" class="btn btn-full">Activar cuenta</a>
+        </div>
+        <div class="card-footer">
+            <p>Desarrollado por Alejandro Jorgen Martén &copy;</p>
+        </div>
+    </div>
+</body>
+</html>
