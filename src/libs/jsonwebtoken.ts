@@ -1,4 +1,5 @@
 import jsonwebtoken from 'jsonwebtoken'
+
 import { JWT_SECRET_ACCESS, JWT_SECRET_MAIL, JWT_SECRET_REFRESH } from '../config'
 import lang from '../lang'
 
