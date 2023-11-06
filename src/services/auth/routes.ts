@@ -2,9 +2,9 @@ import { Router } from "express";
 
 import { checkExpressValidatorMiddlewares } from "../../libs/check-express-validator-middlewares";
 
-import { active, login, register, resendCode } from "./controller";
+import { active, login, logout, register, resendCode } from "./controller";
 import { ActivateAccountValidator, BaseUserValidator, LoginValidator, ResendCodeValidator } from "./validator";
-import { existUserWithEmail, existUserWithUsername } from "./middlewares";
+import { existUserWithEmail, existUserWithUsername, validateRefreshTokenSigned } from "./middlewares";
 
 const router = Router()
 
@@ -20,6 +20,9 @@ router.post('/login', checkExpressValidatorMiddlewares(LoginValidator),
                       login )
 
 router.post('/resend-code', checkExpressValidatorMiddlewares(ResendCodeValidator),
-                            resendCode)
+                            resendCode )
+
+router.delete('/logout', validateRefreshTokenSigned,
+                       logout )
 
 export default router

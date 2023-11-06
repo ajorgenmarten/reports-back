@@ -5,9 +5,20 @@ export interface User {
     password: string
     code: string
     status: boolean
+    sessions: Session[]
     checkPassword: (password: string) => boolean
 }
 
-export type ActivePayload = {
+export type Session = {
+    sid: string
+    name: string
+}
+
+export type ActiveMailTokenPayload = {
     code: string
+}
+
+export type RefreshTokenPayload = {
+    username: string,
+    sid: string
 }

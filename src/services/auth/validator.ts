@@ -1,5 +1,6 @@
 import { body, query } from 'express-validator'
 
+
 export const BaseUserValidator = [
     body('_id')
         .not()

@@ -15,11 +15,11 @@ export const jwtSignAccess = (payload: any) => jsonwebtoken.sign(payload, JWT_SE
 
 export const jwtSignMail = (payload: any) => jsonwebtoken.sign(payload, JWT_SECRET_MAIL as string, {expiresIn: '30 days'})
 
-export function jwtDecodeMail<T> (token: string)  { return jwtBaseDecode<T>(token, JWT_SECRET_MAIL as string) }
+export function jwtDecodeMail<T = any> (token: string)  { return jwtBaseDecode<T>(token, JWT_SECRET_MAIL as string) }
 
 export const jwtDecodeAccess = (token: string) => jsonwebtoken.verify(token, JWT_SECRET_ACCESS as string)
 
-export const jwtDecodeRefresh = (token: string) => jsonwebtoken.verify(token, JWT_SECRET_REFRESH as string)
+export function jwtDecodeRefresh<T = any> (token: string) { return jwtBaseDecode<T>(token, JWT_SECRET_REFRESH as string) }
 
 function jwtBaseDecode<T> (token: string, secret: string): jwtDecodedResult<T>  {
     try {

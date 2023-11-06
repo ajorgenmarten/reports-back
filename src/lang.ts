@@ -10,17 +10,20 @@ export default {
         auth: {
             middlewares: {
                 existUserWithUsername: "Ya existe un usuario con ese nombre de usuario.",
-                existUserWithEmail: "Ya existe un usuario con ese correo."
+                existUserWithEmail: "Ya existe un usuario con ese correo.",
+                validateRefreshTokenSigned: "No tiene acceso a este recurso."
             },
             controllers: {
                 register: "Se ha enviado un mail a su correo, por favor vaya a activar su usuario.",
                 resendCodeNotFound: "No se encuentra registrado en el sistema, por favor registrese.",
                 loginOk: "Ha iniciado sesión correctamente.",
+                loginSessionUnknownDevice: "Dispositivo desconocido.",
                 loginInactiveAccount: "Su cuenta no ha sido activada aun.",
                 loginInvalidUsername: "Credenciales incorrectas.",
                 loginInvalidPassword: "Credenciales incorrectas.",
                 activeOk: "La cuenta ha sido activada",
                 activeNotFound: "La cuenta no existe, por favor verifique sus credenciales.",
+                logoutOk: "Sesión cerrada.",
             }
         }
     }

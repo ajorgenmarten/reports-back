@@ -1,7 +1,16 @@
 import { Schema, SchemaTypes, model } from 'mongoose'
 import bcrypt from 'bcrypt'
 
-import { User } from './types'
+import { User, Session } from './types'
+
+const sessionSchema = new Schema<Session>({
+    name: SchemaTypes.String,
+    sid: SchemaTypes.String
+}, {
+    versionKey: false,
+    _id: false,
+    timestamps: true
+})
 
 const userSchema = new Schema<User>({
     name: {type: SchemaTypes.String, required: true, min: 3},
@@ -9,7 +18,8 @@ const userSchema = new Schema<User>({
     email: {type: SchemaTypes.String, required: true, min: 6, unique: true },
     password:{type: SchemaTypes.String, required: true},
     status: {type: SchemaTypes.Boolean, require: true, default: false},
-    code: {type: SchemaTypes.String }
+    code: {type: SchemaTypes.String },
+    sessions: {type:  [sessionSchema]}
 }, {
     versionKey: false,
     timestamps: true

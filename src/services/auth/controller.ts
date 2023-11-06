@@ -1,11 +1,12 @@
 import { RequestHandler } from "express";
+import { UAParser } from 'ua-parser-js'
 import { randomUUID } from 'crypto'
 
-import { jwtDecodeMail, jwtSignAccess, jwtSignMail, jwtSignRefresh } from "../../libs/jsonwebtoken";
+import { jwtDecodeMail, jwtDecodeRefresh, jwtSignAccess, jwtSignMail, jwtSignRefresh } from "../../libs/jsonwebtoken";
 import { loadMailTemplate, Mailer } from "../../libs/mailer";
 
 import { UserModel } from "./models";
-import { ActivePayload } from "./types";
+import { ActiveMailTokenPayload, RefreshTokenPayload } from "./types";
 
 import { MAILER_CONFIG } from "../../config";
 import lang from "../../lang";
@@ -33,7 +34,7 @@ export const register: RequestHandler = async (req, res) => {
 }
 
 export const active: RequestHandler = async (req, res) => {
-    const verifyJwtResult = jwtDecodeMail<ActivePayload>(req.query.code as string)
+    const verifyJwtResult = jwtDecodeMail<ActiveMailTokenPayload>(req.query.code as string)
 
     if( !verifyJwtResult.success ) return res.status(401).json({
         success: false,
@@ -111,15 +112,46 @@ export const login: RequestHandler = async (req, res) => {
         status: 403
     })
 
-    const jwtAccess = jwtSignAccess({username: user.username})
-    const jwtRefresh = jwtSignRefresh({username: user.username})
+    const { browser, os} = UAParser(req.header('user-agent'))
+    const sessionId = randomUUID()
+    const sessionName = `${ browser?.name || '' } ${ os?.name || '' } ${ os?.version || '' }`.trim() || lang.services.auth.controllers.loginSessionUnknownDevice
+    user.sessions.push( { name: sessionName, sid: sessionId } )
+    await user.save()
 
-    res.cookie('refreshToken', jwtRefresh, { httpOnly: true, maxAge: 1024 * 60 * 60 * 24 * 30 })
+    const jwtAccess = jwtSignAccess({username: user.username})
+    const jwtRefresh = jwtSignRefresh({username: user.username, sid: sessionId})
+
+    res.cookie('refreshToken', jwtRefresh, { httpOnly: true, maxAge: 1024 * 60 * 60 * 24 * 30, signed: true })
 
     return res.json({
         success: true,
         data: { accessToken: jwtAccess },
         status: 200,
         message: lang.services.auth.controllers.loginOk,
+    })
+}
+
+export const logout: RequestHandler = async (req, res) => {
+    const verifyJwtResult = jwtDecodeRefresh<RefreshTokenPayload>(req.signedCookies.refreshToken)
+
+    if( !verifyJwtResult.success ) return res.json({
+        success: false,
+        message: verifyJwtResult.errorMsg,
+        status: 401
+    })
+
+    const userAccount = await UserModel.findOne({username: verifyJwtResult.payload?.username})
+    const sessionIndex = userAccount?.sessions.findIndex(session => session.sid == verifyJwtResult.payload?.sid)
+    if ( sessionIndex != undefined ) {
+        userAccount?.sessions.splice(sessionIndex, 1)
+        await userAccount?.save()
+    }
+
+    res.clearCookie('refreshToken')
+    res.json({
+        success: true,
+        data: undefined,
+        status: 200,
+        message: lang.services.auth.controllers.logoutOk
     })
 }

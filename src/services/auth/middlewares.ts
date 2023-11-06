@@ -22,3 +22,13 @@ export const existUserWithEmail: RequestHandler = async (req, res, next) => {
                                             status: 400 })
     next()
 }
+
+export const validateRefreshTokenSigned: RequestHandler = (req, res, next) => {
+    if( !req.signedCookies.refreshToken ) return res.json({
+        success: false,
+        data: undefined,
+        message: lang.services.auth.middlewares.validateRefreshTokenSigned,
+        status: 400,
+    })
+    next()
+}
