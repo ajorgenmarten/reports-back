@@ -1,6 +1,6 @@
 import jsonwebtoken from 'jsonwebtoken'
 
-import { JWT_SECRET_ACCESS, JWT_SECRET_MAIL, JWT_SECRET_REFRESH } from '../config'
+import { JWT_SECRET_MAIL, JWT_SECRET_REFRESH } from '../config'
 import lang from '../lang'
 
 type jwtDecodedResult<T = any> = {
@@ -11,13 +11,13 @@ type jwtDecodedResult<T = any> = {
 
 export const jwtSignRefresh = (payload: any) => jsonwebtoken.sign(payload, JWT_SECRET_REFRESH as string, { expiresIn: '30 days' })
 
-export const jwtSignAccess = (payload: any) => jsonwebtoken.sign(payload, JWT_SECRET_ACCESS as string, { expiresIn: '15m' })
+export const jwtSignAccess = (payload: any, secret: string) => jsonwebtoken.sign(payload, secret, { expiresIn: '15m' })
 
 export const jwtSignMail = (payload: any) => jsonwebtoken.sign(payload, JWT_SECRET_MAIL as string, {expiresIn: '30 days'})
 
 export function jwtDecodeMail<T = any> (token: string)  { return jwtBaseDecode<T>(token, JWT_SECRET_MAIL as string) }
 
-export const jwtDecodeAccess = (token: string) => jsonwebtoken.verify(token, JWT_SECRET_ACCESS as string)
+export function jwtDecodeAccess<T = any> (token: string, secret: string) { return jwtBaseDecode<T>(token, secret) }
 
 export function jwtDecodeRefresh<T = any> (token: string) { return jwtBaseDecode<T>(token, JWT_SECRET_REFRESH as string) }
 

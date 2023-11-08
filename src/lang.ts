@@ -2,7 +2,7 @@ export default {
     libs: {
         jsonwebtoken: {
             expired: "Su token ha expirado.",
-            invalidSignature: "Su token no es autentico.",
+            invalidSignature: "Su token no es autentico, yo tambien puedo romper las reglas.",
             invalidToken: "Su token no es correcto",
         }
     },
@@ -11,7 +11,8 @@ export default {
             middlewares: {
                 existUserWithUsername: "Ya existe un usuario con ese nombre de usuario.",
                 existUserWithEmail: "Ya existe un usuario con ese correo.",
-                validateRefreshTokenSigned: "No tiene acceso a este recurso."
+                validateRefreshTokenSigned: "No tiene acceso a este recurso.",
+                getAuthUserNotFound: "Su usuario no ha sido encontrado.",
             },
             controllers: {
                 register: "Se ha enviado un mail a su correo, por favor vaya a activar su usuario.",

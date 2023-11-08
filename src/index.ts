@@ -18,4 +18,10 @@ app.use(morgan('dev'))
 
 app.use('/auth',auth)
 
+import { UserModel } from './services/auth/models'
+
+app.get('/test', async (req, res) => {
+    res.send('ok')
+})
+
 app.listen(PORT, () => console.log('server started...'))

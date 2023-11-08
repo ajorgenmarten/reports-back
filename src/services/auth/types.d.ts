@@ -1,3 +1,4 @@
+import { Request } from 'express'
 export interface User {
     name: string
     email: string
@@ -12,6 +13,7 @@ export interface User {
 export type Session = {
     sid: string
     name: string
+    secret: string
 }
 
 export type ActiveMailTokenPayload = {

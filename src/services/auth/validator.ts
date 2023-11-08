@@ -51,3 +51,7 @@ export const ResendCodeValidator = [
         .notEmpty()
         .isEmail()
 ]
+
+export const refreshValidator = [
+    
+]

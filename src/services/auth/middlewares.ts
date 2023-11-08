@@ -1,6 +1,9 @@
 import { RequestHandler } from "express"
 
+import { jwtDecodeRefresh } from "../../libs/jsonwebtoken"
+
 import { UserModel } from "./models"
+import { RefreshTokenPayload } from "./types"
 
 import lang from "../../lang"
 
@@ -23,7 +26,7 @@ export const existUserWithEmail: RequestHandler = async (req, res, next) => {
     next()
 }
 
-export const validateRefreshTokenSigned: RequestHandler = (req, res, next) => {
+export const checkRefreshTokenSigned: RequestHandler = (req, res, next) => {
     if( !req.signedCookies.refreshToken ) return res.json({
         success: false,
         data: undefined,
@@ -31,4 +34,32 @@ export const validateRefreshTokenSigned: RequestHandler = (req, res, next) => {
         status: 400,
     })
     next()
+}
+
+export const isAuth: RequestHandler = async (req, res, next) => {
+    const verifyJwtResult = jwtDecodeRefresh<RefreshTokenPayload>(req.signedCookies.refreshToken)
+
+    if( !verifyJwtResult.success ) return res.status(401).json({
+        success: false,
+        message: verifyJwtResult.errorMsg,
+        status: 401
+    })
+
+    const userAccount = await UserModel.findOne({username: verifyJwtResult.payload?.username})
+
+    if ( !userAccount ) return res.status(401).json({
+        success: false,
+        message: lang.services.auth.middlewares.getAuthUserNotFound,
+        data: undefined,
+        status: 401,
+    })
+
+    if ( !userAccount.status ) return res.status(401).json({
+        success: false,
+        message: lang.services.auth.controllers.resendCodeNotFound
+    })
+
+    req.user = userAccount
+    next() 
+
 }

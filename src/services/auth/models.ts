@@ -5,7 +5,8 @@ import { User, Session } from './types'
 
 const sessionSchema = new Schema<Session>({
     name: SchemaTypes.String,
-    sid: SchemaTypes.String
+    sid: SchemaTypes.String,
+    secret: { type: SchemaTypes.String, select: false }
 }, {
     versionKey: false,
     _id: false,
@@ -16,7 +17,7 @@ const userSchema = new Schema<User>({
     name: {type: SchemaTypes.String, required: true, min: 3},
     username: {type: SchemaTypes.String, required: true, min: 3, unique: true},
     email: {type: SchemaTypes.String, required: true, min: 6, unique: true },
-    password:{type: SchemaTypes.String, required: true},
+    password:{type: SchemaTypes.String, required: true, select: false},
     status: {type: SchemaTypes.Boolean, require: true, default: false},
     code: {type: SchemaTypes.String },
     sessions: {type:  [sessionSchema]}

@@ -1,12 +1,12 @@
-import { RequestHandler } from "express";
+import { Request, RequestHandler } from "express";
 import { UAParser } from 'ua-parser-js'
-import { randomUUID } from 'crypto'
+import { randomUUID, randomBytes } from 'crypto'
 
 import { jwtDecodeMail, jwtDecodeRefresh, jwtSignAccess, jwtSignMail, jwtSignRefresh } from "../../libs/jsonwebtoken";
 import { loadMailTemplate, Mailer } from "../../libs/mailer";
 
 import { UserModel } from "./models";
-import { ActiveMailTokenPayload, RefreshTokenPayload } from "./types";
+import { ActiveMailTokenPayload, RefreshTokenPayload, User } from "./types";
 
 import { MAILER_CONFIG } from "../../config";
 import lang from "../../lang";
@@ -92,7 +92,7 @@ export const resendCode: RequestHandler = async (req, res) => {
 }
 
 export const login: RequestHandler = async (req, res) => {
-    const user = await UserModel.findOne({username: req.body.username})
+    const user = await UserModel.findOne({username: req.body.username}, '+password')
     if( !user ) return res.status(401).json({
         success: false,
         message: lang.services.auth.controllers.loginInvalidUsername,
@@ -114,11 +114,12 @@ export const login: RequestHandler = async (req, res) => {
 
     const { browser, os} = UAParser(req.header('user-agent'))
     const sessionId = randomUUID()
+    const sessionSecret = randomBytes(16).toString('base64')
     const sessionName = `${ browser?.name || '' } ${ os?.name || '' } ${ os?.version || '' }`.trim() || lang.services.auth.controllers.loginSessionUnknownDevice
-    user.sessions.push( { name: sessionName, sid: sessionId } )
+    user.sessions.push( { name: sessionName, sid: sessionId, secret: sessionSecret } )
     await user.save()
 
-    const jwtAccess = jwtSignAccess({username: user.username})
+    const jwtAccess = jwtSignAccess({username: user.username}, sessionSecret)
     const jwtRefresh = jwtSignRefresh({username: user.username, sid: sessionId})
 
     res.cookie('refreshToken', jwtRefresh, { httpOnly: true, maxAge: 1024 * 60 * 60 * 24 * 30, signed: true })
@@ -154,4 +155,10 @@ export const logout: RequestHandler = async (req, res) => {
         status: 200,
         message: lang.services.auth.controllers.logoutOk
     })
+}
+
+export const refresh: RequestHandler = async (req, res) => {
+    const userAccount = req.user as User
+    const sessionSecret = await UserModel.findOne({username: userAccount.username})
+    const accessToken = jwtSignAccess({ username: userAccount.username }, '')
 }
