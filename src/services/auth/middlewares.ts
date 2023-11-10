@@ -27,7 +27,7 @@ export const existUserWithEmail: RequestHandler = async (req, res, next) => {
 }
 
 export const checkRefreshTokenSigned: RequestHandler = (req, res, next) => {
-    if( !req.signedCookies.refreshToken ) return res.json({
+    if( !req.signedCookies.refreshToken ) return res.status(400).json({
         success: false,
         data: undefined,
         message: lang.services.auth.middlewares.validateRefreshTokenSigned,
@@ -45,7 +45,7 @@ export const isAuth: RequestHandler = async (req, res, next) => {
         status: 401
     })
 
-    const userAccount = await UserModel.findOne({username: verifyJwtResult.payload?.username})
+    const userAccount = await UserModel.findOne({username: verifyJwtResult.payload?.username}, '+sessions.secret')
 
     if ( !userAccount ) return res.status(401).json({
         success: false,
@@ -59,6 +59,7 @@ export const isAuth: RequestHandler = async (req, res, next) => {
         message: lang.services.auth.controllers.resendCodeNotFound
     })
 
+    req.body.accountSid = verifyJwtResult.payload?.sid
     req.user = userAccount
     next() 
 

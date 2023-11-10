@@ -23,7 +23,8 @@ router.post('/resend-code', checkExpressValidatorMiddlewares(ResendCodeValidator
                             resendCode )
 
 router.delete('/logout', checkRefreshTokenSigned,
-                       logout )
+                         isAuth,
+                         logout )
 
 router.get('/refresh', checkRefreshTokenSigned,
                        isAuth,

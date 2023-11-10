@@ -1,4 +1,4 @@
-import { Request, RequestHandler } from "express";
+import { RequestHandler } from "express";
 import { UAParser } from 'ua-parser-js'
 import { randomUUID, randomBytes } from 'crypto'
 
@@ -133,16 +133,11 @@ export const login: RequestHandler = async (req, res) => {
 }
 
 export const logout: RequestHandler = async (req, res) => {
-    const verifyJwtResult = jwtDecodeRefresh<RefreshTokenPayload>(req.signedCookies.refreshToken)
-
-    if( !verifyJwtResult.success ) return res.json({
-        success: false,
-        message: verifyJwtResult.errorMsg,
-        status: 401
-    })
-
-    const userAccount = await UserModel.findOne({username: verifyJwtResult.payload?.username})
-    const sessionIndex = userAccount?.sessions.findIndex(session => session.sid == verifyJwtResult.payload?.sid)
+    const user = req.user as User
+    // req.body.accountSid es el id de sesion que se obtiene en el middleware isAuth
+    const sid = req.body.accountSid
+    const userAccount = await UserModel.findOne({username: user.username})
+    const sessionIndex = userAccount?.sessions.findIndex(session => session.sid == sid)
     if ( sessionIndex != undefined ) {
         userAccount?.sessions.splice(sessionIndex, 1)
         await userAccount?.save()
@@ -159,6 +154,9 @@ export const logout: RequestHandler = async (req, res) => {
 
 export const refresh: RequestHandler = async (req, res) => {
     const userAccount = req.user as User
-    const sessionSecret = await UserModel.findOne({username: userAccount.username})
-    const accessToken = jwtSignAccess({ username: userAccount.username }, '')
+    // req.body.accountSid es el id de sesion que se obtiene en el middleware isAuth
+    const sid = req.body.accountSid
+    const seccret = userAccount.sessions.find(session => session.sid == sid)?.secret as string
+    const accessToken = jwtSignAccess({ username: userAccount.username }, seccret)
+    res.json({accessToken})
 }
