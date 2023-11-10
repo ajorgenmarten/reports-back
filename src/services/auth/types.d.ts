@@ -24,3 +24,7 @@ export type RefreshTokenPayload = {
     username: string,
     sid: string
 }
+
+export type AccessTokenPayload = {
+    username: string
+}

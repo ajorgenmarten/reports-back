@@ -10,6 +10,7 @@ import { ActiveMailTokenPayload, RefreshTokenPayload, User } from "./types";
 
 import { MAILER_CONFIG } from "../../config";
 import lang from "../../lang";
+import { getSessionSecret } from "./helper";
 
 export const register: RequestHandler = async (req, res) => {
     //generamos el token de verificacion
@@ -155,8 +156,7 @@ export const logout: RequestHandler = async (req, res) => {
 export const refresh: RequestHandler = async (req, res) => {
     const userAccount = req.user as User
     // req.body.accountSid es el id de sesion que se obtiene en el middleware isAuth
-    const sid = req.body.accountSid
-    const seccret = userAccount.sessions.find(session => session.sid == sid)?.secret as string
-    const accessToken = jwtSignAccess({ username: userAccount.username }, seccret)
+    const secret = getSessionSecret(userAccount, req.body.accountSid) as string
+    const accessToken = jwtSignAccess({ username: userAccount.username }, secret)
     res.json({accessToken})
 }

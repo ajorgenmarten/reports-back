@@ -10,6 +10,7 @@ import './database'
 import { COOKIE_PARSER_SECRET, PORT } from './config'
 
 import auth from './services/auth/routes'
+import reports from './services/reports/routes'
 
 app.use(cookieParser(COOKIE_PARSER_SECRET))
 app.use(express.urlencoded({extended:false}))
@@ -17,6 +18,8 @@ app.use(express.json())
 app.use(morgan('dev'))
 
 app.use('/auth',auth)
+app.use('/reports', reports)
+
 app.get('/test', async (req, res) => {
     res.send('ok')
 })

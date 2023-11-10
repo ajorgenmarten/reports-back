@@ -17,7 +17,7 @@ export const jwtSignMail = (payload: any) => jsonwebtoken.sign(payload, JWT_SECR
 
 export function jwtDecodeMail<T = any> (token: string)  { return jwtBaseDecode<T>(token, JWT_SECRET_MAIL as string) }
 
-export function jwtDecodeAccess<T = any> (token: string, secret: string) { return jwtBaseDecode<T>(token, secret) }
+export function jwtDecode<T = any> (token: string, secret: string) { return jwtBaseDecode<T>(token, secret) }
 
 export function jwtDecodeRefresh<T = any> (token: string) { return jwtBaseDecode<T>(token, JWT_SECRET_REFRESH as string) }
 

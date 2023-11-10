@@ -1,4 +1,4 @@
-import { body, query } from 'express-validator'
+import { body, header, query } from 'express-validator'
 
 
 export const BaseUserValidator = [
@@ -52,6 +52,9 @@ export const ResendCodeValidator = [
         .isEmail()
 ]
 
-export const refreshValidator = [
-    
+export const accessTokenValidator = [
+    header('accessToken')
+        .exists()
+        .notEmpty()
+        .isJWT()
 ]
