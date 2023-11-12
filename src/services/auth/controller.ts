@@ -93,7 +93,9 @@ export const resendCode: RequestHandler = async (req, res) => {
 }
 
 export const login: RequestHandler = async (req, res) => {
-    const user = await UserModel.findOne({username: req.body.username}, '+password')
+    const user = await UserModel.findOne({username: req.body.username}, '+password +sessions')
+    console.log(user);
+    
     if( !user ) return res.status(401).json({
         success: false,
         message: lang.services.auth.controllers.loginInvalidUsername,
@@ -137,7 +139,7 @@ export const logout: RequestHandler = async (req, res) => {
     const user = req.user as User
     // req.body.accountSid es el id de sesion que se obtiene en el middleware isAuth
     const sid = req.body.accountSid
-    const userAccount = await UserModel.findOne({username: user.username})
+    const userAccount = await UserModel.findOne({username: user.username}, '+sessions')
     const sessionIndex = userAccount?.sessions.findIndex(session => session.sid == sid)
     if ( sessionIndex != undefined ) {
         userAccount?.sessions.splice(sessionIndex, 1)

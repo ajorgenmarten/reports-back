@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param, query } from "express-validator";
 
 export const reportCreateValidator = [
     body('_id')
@@ -23,4 +23,19 @@ export const reportCreateValidator = [
     body('status')
         .not()
         .exists()    
+]
+
+export const getReportValidator = [
+    param('id')
+        .exists()
+        .notEmpty()
+        .isMongoId()
+]
+
+export const getMyReportsValidator = [
+    query('page')
+        .optional()
+        .exists()
+        .notEmpty()
+        .isNumeric()
 ]

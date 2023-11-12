@@ -19,8 +19,8 @@ const userSchema = new Schema<User>({
     email: {type: SchemaTypes.String, required: true, min: 6, unique: true },
     password:{type: SchemaTypes.String, required: true, select: false},
     status: {type: SchemaTypes.Boolean, require: true, default: false},
-    code: {type: SchemaTypes.String },
-    sessions: {type:  [sessionSchema]}
+    code: {type: SchemaTypes.String, select: false },
+    sessions: {type:  [sessionSchema], select: false }
 }, {
     versionKey: false,
     timestamps: true

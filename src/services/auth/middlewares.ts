@@ -45,7 +45,7 @@ export const isAuth: RequestHandler = async (req, res, next) => {
         status: 401
     })
 
-    const userAccount = await UserModel.findOne({username: verifyJwtResult.payload?.username}, '+sessions.secret')
+    const userAccount = await UserModel.findOne({username: verifyJwtResult.payload?.username}, '+sessions +sessions.secret')
 
     if ( !userAccount ) return res.status(401).json({
         success: false,
