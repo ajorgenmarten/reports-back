@@ -39,11 +39,16 @@ export const isAuth: RequestHandler = async (req, res, next) => {
     
     const verifyJwtResult = jwtDecodeRefresh<RefreshTokenPayload>(req.signedCookies.refreshToken)
 
-    if( !verifyJwtResult.success ) return res.status(401).json({
-        success: false,
-        message: verifyJwtResult.errorMsg,
-        status: 401
-    })
+    if( !verifyJwtResult.success ) {
+        if (verifyJwtResult.errorMsg == lang.libs.jsonwebtoken.expired) {
+            res.clearCookie('refreshToken')
+        }
+        return res.status(401).json({
+            success: false,
+            message: verifyJwtResult.errorMsg,
+            status: 401
+        })
+    }
 
     const userAccount = await UserModel.findOne({username: verifyJwtResult.payload?.username}, '+sessions +sessions.secret')
 
