@@ -1,6 +1,7 @@
 import { ObjectId } from "mongoose"
 
 export interface Report {
+    _id: ObjectId
     author: ObjectId
     title: string
     type: ReportType

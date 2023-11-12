@@ -67,7 +67,6 @@ export const isAuth: RequestHandler = async (req, res, next) => {
 export const can = () => {
     
     const canHandler: RequestHandler = (req, res, next) => {
-        console.log('handle can');
         const authUser = req.user as User
         const token = req.header('accessToken') as string
         const secret = getSessionSecret(req.user as User, req.body.accountSid) as string
@@ -84,8 +83,6 @@ export const can = () => {
             message:lang.services.auth.middlewares.canUsernamesNotMatch,
             status: 401,
         })
-
-        
 
         next()
 

@@ -3,7 +3,7 @@ export default {
         jsonwebtoken: {
             expired: "Su token ha expirado.",
             invalidSignature: "Su token no es autentico, yo tambien puedo romper las reglas.",
-            invalidToken: "Su token no es correcto",
+            invalidToken: "Su token no es correcto.",
         }
     },
     services: {
@@ -26,6 +26,15 @@ export default {
                 activeOk: "La cuenta ha sido activada",
                 activeNotFound: "La cuenta no existe, por favor verifique sus credenciales.",
                 logoutOk: "Sesión cerrada.",
+            }
+        },
+        reports: {
+            middlewares: {
+                verifySeedNotSend: "Debe mandar la semilla.",
+                verifySeedNotMatch: "Este tipo de reporte no está registrado."
+            },
+            controllers: {
+                createOk: "Su reporte ha sido enviado."
             }
         }
     }

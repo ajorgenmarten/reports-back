@@ -5,9 +5,8 @@ export const reportCreateValidator = [
         .not()
         .exists(),
     body('author')
-        .exists()
-        .notEmpty()
-        .isMongoId(),
+        .not()
+        .exists(),
     body('title')
         .exists()
         .notEmpty(),
