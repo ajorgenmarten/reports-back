@@ -5,6 +5,7 @@ import { ReportModel } from "./models";
 import { User } from "../auth/types";
 
 import lang from "../../lang";
+import { paginator } from "../../libs/database";
 
 export const create: RequestHandler = async (req, res) => {
     const report = new ReportModel(req.body)
@@ -28,14 +29,11 @@ export const getReport: RequestHandler = async (req, res) => {
 }
 
 export const getMyReports: RequestHandler = async (req, res) => {
-    const itemsPerPages = 40
-    const page = req.query.page as string ?? 1
-    const startIndex = parseInt( page ) - 1
     const authUser = req.user as User
-    const reports = await ReportModel.find({ author: authUser._id }).populate('author').skip(startIndex * itemsPerPages).limit(40)
+    const pagination = await paginator(ReportModel, { author:  authUser._id}).populate('author')
     return res.json({
         success: true,
-        data: { reports },
+        data: pagination,
         status: 200
     })
 }
