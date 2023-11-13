@@ -4,16 +4,16 @@ import { jwtDecode, jwtDecodeRefresh } from "../../libs/jsonwebtoken"
 
 import { UserModel } from "./models"
 import { getSessionSecret } from "./helper"
+import { accessTokenValidator } from "./validator"
 import { AccessTokenPayload, RefreshTokenPayload, User } from "./types"
 
-import lang from "../../lang"
-import { accessTokenValidator } from "./validator"
 import { checkExpressValidatorMiddlewares } from "../../libs/check-express-validator-middlewares"
+import { handleResponse } from "../../libs/http"
+import lang from "../../lang"
 
 export const existUserWithUsername: RequestHandler = async (req, res, next) => {
     const users = await UserModel.find({username: req.body.username})
-    if(users.length) return res.status(400).json({ success: false,
-                                            data: undefined,
+    if(users.length) return handleResponse(res,{ success: false,
                                             message: lang.services.auth.middlewares.existUserWithUsername,
                                             status: 400 })
     next()
@@ -22,17 +22,15 @@ export const existUserWithUsername: RequestHandler = async (req, res, next) => {
 
 export const existUserWithEmail: RequestHandler = async (req, res, next) => {
     const users = await UserModel.find({email: req.body.email})
-    if(users.length) return res.status(400).json({ success: false,
-                                            data: undefined,
+    if(users.length) return handleResponse(res,{ success: false,
                                             message: lang.services.auth.middlewares.existUserWithEmail,
                                             status: 400 })
     next()
 }
 
 export const isAuth: RequestHandler = async (req, res, next) => {
-    if( !req.signedCookies.refreshToken ) return res.status(400).json({
+    if( !req.signedCookies.refreshToken ) return handleResponse(res,{
         success: false,
-        data: undefined,
         message: lang.services.auth.middlewares.validateRefreshTokenSigned,
         status: 400,
     })
@@ -43,7 +41,7 @@ export const isAuth: RequestHandler = async (req, res, next) => {
         if (verifyJwtResult.errorMsg == lang.libs.jsonwebtoken.expired) {
             res.clearCookie('refreshToken')
         }
-        return res.status(401).json({
+        return handleResponse(res,{
             success: false,
             message: verifyJwtResult.errorMsg,
             status: 401
@@ -52,14 +50,13 @@ export const isAuth: RequestHandler = async (req, res, next) => {
 
     const userAccount = await UserModel.findOne({username: verifyJwtResult.payload?.username}, '+sessions +sessions.secret')
 
-    if ( !userAccount ) return res.status(401).json({
+    if ( !userAccount ) return handleResponse(res,{
         success: false,
         message: lang.services.auth.middlewares.getAuthUserNotFound,
-        data: undefined,
         status: 401,
     })
 
-    if ( !userAccount.status ) return res.status(401).json({
+    if ( !userAccount.status ) return handleResponse(res,{
         success: false,
         message: lang.services.auth.controllers.resendCodeNotFound
     })
@@ -69,6 +66,9 @@ export const isAuth: RequestHandler = async (req, res, next) => {
     next()
 }
 
+/**
+ * Este middleware debe ser pasado a las rutas como invocacion [con los paréntesis al final "()"]
+ */
 export const can = () => {
     
     const canHandler: RequestHandler = (req, res, next) => {
@@ -77,13 +77,13 @@ export const can = () => {
         const secret = getSessionSecret(req.user as User, req.body.accountSid) as string
         const verifyJwtResult = jwtDecode<AccessTokenPayload>(token, secret)
 
-        if ( !verifyJwtResult.success ) return res.status(401).json({
+        if ( !verifyJwtResult.success ) return handleResponse(res,{
             success: false,
             message: verifyJwtResult.errorMsg,
             status: 401,
         })
 
-        if ( verifyJwtResult.payload?.username != authUser.username ) return res.status(401).json({
+        if ( verifyJwtResult.payload?.username != authUser.username ) return handleResponse(res,{
             success: false,
             message:lang.services.auth.middlewares.canUsernamesNotMatch,
             status: 401,

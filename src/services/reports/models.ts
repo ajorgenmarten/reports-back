@@ -16,7 +16,7 @@ const reportSchema = new Schema<Report>({
     seed: SchemaTypes.String,
     title: SchemaTypes.String,
     type: {type: reportTypeSchema, required: true},
-    status: SchemaTypes.Boolean
+    status: {type: SchemaTypes.Boolean, default: false}
 }, {
     versionKey: false,
     timestamps: true,

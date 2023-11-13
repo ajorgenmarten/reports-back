@@ -11,16 +11,17 @@ import { ActiveMailTokenPayload, RefreshTokenPayload, User } from "./types";
 import { MAILER_CONFIG } from "../../config";
 import lang from "../../lang";
 import { getSessionSecret } from "./helper";
+import { handleResponse } from "../../libs/http";
 
 export const register: RequestHandler = async (req, res) => {
-    //generamos el token de verificacion
+    //generar el token de verificacion
     const code = randomUUID()
     const jwt: string = jwtSignMail({ code })
 
-    //registramos el usuario
+    //registrar el usuario
     const userSaved = await UserModel.create({ ...req.body, code })
 
-    //mandamos correo de activacion
+    //mandar correo de activacion
     Mailer.sendMail({
         subject: "Activar cuenta",
         from: `Reportes TIC <${MAILER_CONFIG.auth.user}>`,
@@ -31,24 +32,25 @@ export const register: RequestHandler = async (req, res) => {
         })
     })
 
-    res.json({ success: true, status: 200, message: undefined, data: lang.services.auth.controllers.register })
+    return handleResponse(res, {
+        success: true,
+        message: lang.services.auth.controllers.register
+    })
 }
 
 export const active: RequestHandler = async (req, res) => {
     const verifyJwtResult = jwtDecodeMail<ActiveMailTokenPayload>(req.query.code as string)
 
-    if( !verifyJwtResult.success ) return res.status(401).json({
+    if( !verifyJwtResult.success ) return handleResponse(res, {
         success: false,
-        data: undefined,
         status: 401,
         message: verifyJwtResult.errorMsg
     })
 
     const userAccount = await UserModel.findOne({ code: verifyJwtResult.payload?.code })
     
-    if( !userAccount ) return res.status(404).json({ 
+    if( !userAccount ) return handleResponse(res, { 
         success: false,
-        data: undefined,
         message: lang.services.auth.controllers.activeNotFound,
         status: 404,
     })
@@ -56,21 +58,19 @@ export const active: RequestHandler = async (req, res) => {
     userAccount.status = true
     await userAccount.save()
     
-    return res.status(200).json({
+    return handleResponse(res, {
         success: true,
         message: lang.services.auth.controllers.activeOk,
-        status: 200,
-        data: undefined
+        status: 200
     })
 }
 
 export const resendCode: RequestHandler = async (req, res) => {
     const userAccount = await UserModel.findOne({email: req.body.email})
     
-    if( !userAccount ) return res.status(404).json({
+    if( !userAccount ) return handleResponse(res, {
         success: false,
         message: lang.services.auth.controllers.resendCodeNotFound,
-        data: undefined,
         status: 404,
     })
 
@@ -89,28 +89,24 @@ export const resendCode: RequestHandler = async (req, res) => {
         })
     })
 
-    res.json({ success: true, status: 200, message: undefined, data: lang.services.auth.controllers.register })
+    return handleResponse(res,{ success: true, status: 200, message: lang.services.auth.controllers.register })
 }
 
 export const login: RequestHandler = async (req, res) => {
     const user = await UserModel.findOne({username: req.body.username}, '+password +sessions')
-    console.log(user);
     
-    if( !user ) return res.status(401).json({
+    if( !user ) return handleResponse(res,{
         success: false,
         message: lang.services.auth.controllers.loginInvalidUsername,
-        data: undefined,
         status: 401
     })
-    if( !user.checkPassword(req.body.password) ) return res.status(401).json({
+    if( !user.checkPassword(req.body.password) ) return handleResponse(res,{
         success: false,
         message: lang.services.auth.controllers.loginInvalidPassword,
-        data: undefined,
         status: 401
     })
-    if( !user.status ) return res.status(403).json({
+    if( !user.status ) return handleResponse(res,{
         success: false,
-        data: undefined,
         message: lang.services.auth.controllers.loginInactiveAccount,
         status: 403
     })
@@ -127,12 +123,7 @@ export const login: RequestHandler = async (req, res) => {
 
     res.cookie('refreshToken', jwtRefresh, { httpOnly: true, maxAge: 1024 * 60 * 60 * 24 * 30, signed: true })
 
-    return res.json({
-        success: true,
-        data: { accessToken: jwtAccess },
-        status: 200,
-        message: lang.services.auth.controllers.loginOk,
-    })
+    return handleResponse(res, { success: true, data: { accessToken: jwtAccess }, message: lang.services.auth.controllers.loginOk })
 }
 
 export const logout: RequestHandler = async (req, res) => {
@@ -147,12 +138,7 @@ export const logout: RequestHandler = async (req, res) => {
     }
 
     res.clearCookie('refreshToken')
-    res.json({
-        success: true,
-        data: undefined,
-        status: 200,
-        message: lang.services.auth.controllers.logoutOk
-    })
+    return handleResponse(res, { success: true, message: lang.services.auth.controllers.logoutOk })
 }
 
 export const refresh: RequestHandler = async (req, res) => {
@@ -160,5 +146,5 @@ export const refresh: RequestHandler = async (req, res) => {
     // req.body.accountSid es el id de sesion que se obtiene en el middleware isAuth
     const secret = getSessionSecret(userAccount, req.body.accountSid) as string
     const accessToken = jwtSignAccess({ username: userAccount.username }, secret)
-    res.json({accessToken})
+    return handleResponse(res, { success: true, data: {accessToken} })
 }

@@ -4,6 +4,9 @@ export default {
             expired: "Su token ha expirado.",
             invalidSignature: "Su token no es autentico, yo tambien puedo romper las reglas.",
             invalidToken: "Su token no es correcto.",
+        },
+        database: {
+            pageNotFound: "Esta página no ha sido encontrada."
         }
     },
     services: {
@@ -34,7 +37,8 @@ export default {
                 verifySeedNotMatch: "Este tipo de reporte no está registrado."
             },
             controllers: {
-                createOk: "Su reporte ha sido enviado."
+                getReportNotFound: "Reporte no encontrado, a lo mejor fue eliminado.",
+                createOk: "Su reporte ha sido enviado.",
             }
         }
     }
