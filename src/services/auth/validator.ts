@@ -1,4 +1,5 @@
 import { body, header, query } from 'express-validator'
+import { validate } from '../../libs/check-express-validator-middlewares'
 
 
 export const BaseUserValidator = [
@@ -26,14 +27,16 @@ export const BaseUserValidator = [
         .exists(),
     body('status')
         .not()
-        .exists()
+        .exists(),
+    validate
 ]
 
 export const ActivateAccountValidator = [
     query('code')
         .exists()
         .notEmpty()
-        .isJWT()
+        .isJWT(),
+    validate
 ]
 
 export const LoginValidator = [
@@ -42,19 +45,23 @@ export const LoginValidator = [
         .notEmpty(),
     body('password')
         .exists()
-        .notEmpty()
+        .notEmpty(),
+    validate
 ]
 
 export const ResendCodeValidator = [
     body('email')
         .exists()
         .notEmpty()
-        .isEmail()
+        .isEmail(),
+    validate
 ]
 
 export const accessTokenValidator = [
-    header('accessToken')
+    header('Authorization')
         .exists()
         .notEmpty()
-        .isJWT()
+        .trim('Bearer ')
+        .isJWT(),
+    validate
 ]

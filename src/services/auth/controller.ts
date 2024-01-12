@@ -2,8 +2,8 @@ import { RequestHandler } from "express";
 import { UAParser } from 'ua-parser-js'
 import { randomUUID, randomBytes } from 'crypto'
 
-import { jwtDecodeMail, jwtDecodeRefresh, jwtSignAccess, jwtSignMail, jwtSignRefresh } from "../../libs/jsonwebtoken";
-import { loadMailTemplate, Mailer } from "../../libs/mailer";
+import { jwtDecodeMail, jwtSignAccess, jwtSignMail, jwtSignRefresh } from "../../libs/jsonwebtoken";
+import { isReady, loadMailTemplate, Mailer } from "../../libs/mailer";
 
 import { UserModel } from "./models";
 import { ActiveMailTokenPayload, RefreshTokenPayload, User } from "./types";
@@ -14,6 +14,13 @@ import { getSessionSecret } from "./helper";
 import { handleResponse } from "../../libs/http";
 
 export const register: RequestHandler = async (req, res) => {
+    const mailVerify = await isReady()
+    if(!mailVerify) return handleResponse(res, {
+        success:  false,
+        message: lang.services.auth.controllers.registerMailError,
+        status: 500
+    })
+
     //generar el token de verificacion
     const code = randomUUID()
     const jwt: string = jwtSignMail({ code })

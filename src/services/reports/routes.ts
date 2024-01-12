@@ -6,24 +6,22 @@ import { getMyReportsValidator, getReportValidator, reportCreateValidator } from
 
 import { can, isAuth } from "../auth/middlewares";
 
-import { checkExpressValidatorMiddlewares } from "../../libs/check-express-validator-middlewares";
-
 const router = Router()
 
 router.post('/create', isAuth,
-                       checkExpressValidatorMiddlewares(reportCreateValidator),
                        can(),
+                       reportCreateValidator,
                        verifySeed,
                        create)
 
 router.get('/details/:id',  isAuth,
-                            checkExpressValidatorMiddlewares(getReportValidator),
                             can(),
+                            getReportValidator,
                             getReport)
 
 router.get('/my-reports', isAuth,
-                          checkExpressValidatorMiddlewares(getMyReportsValidator),
                           can(),
+                          getMyReportsValidator,
                           getMyReports)
 
-export default router
+export { router }

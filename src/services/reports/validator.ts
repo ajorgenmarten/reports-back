@@ -1,4 +1,5 @@
 import { body, param, query } from "express-validator";
+import { validate } from "../../libs/check-express-validator-middlewares";
 
 export const reportCreateValidator = [
     body('_id')
@@ -22,14 +23,16 @@ export const reportCreateValidator = [
         .notEmpty(),
     body('status')
         .not()
-        .exists()    
+        .exists(),
+    validate
 ]
 
 export const getReportValidator = [
     param('id')
         .exists()
         .notEmpty()
-        .isMongoId()
+        .isMongoId(),
+    validate
 ]
 
 export const getMyReportsValidator = [
@@ -37,5 +40,6 @@ export const getMyReportsValidator = [
         .optional()
         .exists()
         .notEmpty()
-        .isNumeric()
+        .isNumeric(),
+    validate
 ]

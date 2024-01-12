@@ -16,4 +16,10 @@ export const loadMailTemplate = (templatePath: string, replaces?: any) => {
     })
 }
 
-Mailer.verify().then(() => console.log("Listo para enviar correo...")).catch(e => {console.log(e); process.exit()});
+export const isReady = async() => {
+    try {
+        return await Mailer.verify()
+    } catch {
+        return false
+    }
+}

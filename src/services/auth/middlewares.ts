@@ -7,7 +7,6 @@ import { getSessionSecret } from "./helper"
 import { accessTokenValidator } from "./validator"
 import { AccessTokenPayload, RefreshTokenPayload, User } from "./types"
 
-import { checkExpressValidatorMiddlewares } from "../../libs/check-express-validator-middlewares"
 import { handleResponse } from "../../libs/http"
 import lang from "../../lang"
 
@@ -73,7 +72,7 @@ export const can = () => {
     
     const canHandler: RequestHandler = (req, res, next) => {
         const authUser = req.user as User
-        const token = req.header('accessToken') as string
+        const token = req.header('Authorization') as string
         const secret = getSessionSecret(req.user as User, req.body.accountSid) as string
         const verifyJwtResult = jwtDecode<AccessTokenPayload>(token, secret)
 
@@ -92,5 +91,5 @@ export const can = () => {
         next()
 
     }
-    return [ ...checkExpressValidatorMiddlewares(accessTokenValidator), canHandler]
+    return [ ...accessTokenValidator, canHandler]
 }

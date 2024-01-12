@@ -20,6 +20,7 @@ export default {
             },
             controllers: {
                 register: "Se ha enviado un mail a su correo, por favor vaya a activar su usuario.",
+                registerMailError: "No es posible enviar el correo de activacion, por favor intente mas tarde.",
                 resendCodeNotFound: "No se encuentra registrado en el sistema, por favor registrese.",
                 loginOk: "Ha iniciado sesión correctamente.",
                 loginSessionUnknownDevice: "Dispositivo desconocido.",

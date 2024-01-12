@@ -1,25 +1,23 @@
 import { Router } from "express";
 
-import { checkExpressValidatorMiddlewares } from "../../libs/check-express-validator-middlewares";
-
 import { active, login, logout, refresh, register, resendCode } from "./controller";
 import { ActivateAccountValidator, BaseUserValidator, LoginValidator, ResendCodeValidator } from "./validator";
 import { existUserWithEmail, existUserWithUsername, isAuth } from "./middlewares";
 
 const router = Router()
 
-router.post('/register', checkExpressValidatorMiddlewares(BaseUserValidator),
+router.post('/register', BaseUserValidator,
                          existUserWithEmail,
                          existUserWithUsername,
                          register )
 
-router.get('/active', checkExpressValidatorMiddlewares(ActivateAccountValidator),
+router.get('/active', ActivateAccountValidator,
                       active )
 
-router.post('/login', checkExpressValidatorMiddlewares(LoginValidator),
+router.post('/login', LoginValidator,
                       login )
 
-router.post('/resend-code', checkExpressValidatorMiddlewares(ResendCodeValidator),
+router.post('/resend-code', ResendCodeValidator,
                             resendCode )
 
 router.delete('/logout', isAuth,
@@ -28,4 +26,4 @@ router.delete('/logout', isAuth,
 router.get('/refresh', isAuth,
                        refresh)
 
-export default router
+export { router }

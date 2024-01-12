@@ -1,15 +1,13 @@
-import { RequestHandler } from 'express'
-import { validationResult, ValidationChain } from 'express-validator'
+import { RequestHandler } from "express"
+import { validationResult } from "express-validator"
+import { handleResponse } from "./http"
 
-const checkExpressValidatorMiddlewaresFunction: RequestHandler =  (req, res, next) => {
-    const validationResults = validationResult(req)
-    if(validationResults.isEmpty()) return next()
-    else res.status(400).json({ success: false,
-                                data: validationResults.array({onlyFirstError: true}),
-                                message: "Error de validadion de datos.",
-                                status: 400})
-}
-
-export const checkExpressValidatorMiddlewares = (expressValidatorSchemas: ValidationChain[]): RequestHandler[] => {
-    return [...expressValidatorSchemas, checkExpressValidatorMiddlewaresFunction]
+export const validate: RequestHandler = (req, res, next) => {
+    const validation = validationResult(req)
+    if ( validation.isEmpty() ) return next()
+    return handleResponse(res, {
+        success: false,
+        message: validation.array({onlyFirstError: true})[0].msg,
+        status: 400,
+    })
 }

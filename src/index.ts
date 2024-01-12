@@ -8,20 +8,17 @@ const app = express()
 
 import './database'
 import { COOKIE_PARSER_SECRET, PORT } from './config'
-
-import auth from './services/auth/routes'
-import reports from './services/reports/routes'
+import { router } from './libs/autoload'
 
 app.use(cookieParser(COOKIE_PARSER_SECRET))
 app.use(express.urlencoded({extended:false}))
 app.use(express.json())
 app.use(morgan('dev'))
 
-app.use('/auth',auth)
-app.use('/reports', reports)
+app.use(router)
 
 app.get('/test', async (req, res) => {
     res.send('ok')
 })
 
-app.listen(PORT, () => console.log('server started...'))
+app.listen(PORT, () => console.log('⚡ Server started...'))
