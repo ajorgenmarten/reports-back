@@ -13,12 +13,12 @@ type HttpResponse<T = any> = {
  * @param {handleResponseConfig} config Objeto que contiene los datos que se van a enviar como respuesta
  * @returns 
  */
-export const handleResponse = (res: Response, config: HttpResponse) => {
+export const handleResponse = (res: Response, data: HttpResponse) => {
     const response: HttpResponse = {
-        success: config.success,
-        data: config.data,
-        message: config.message,
-        status: config.status
+        success: data.success,
+        data: data.data,
+        message: data.message,
+        status: data.status
     }
-    return res.status(config.status || 200).json(response)
+    return res.status(data.status || 200).json(response)
 }
