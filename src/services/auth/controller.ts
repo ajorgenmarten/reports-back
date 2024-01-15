@@ -100,7 +100,7 @@ export const resendCode: RequestHandler = async (req, res) => {
 }
 
 export const login: RequestHandler = async (req, res) => {
-    const user = await UserModel.findOne({username: req.body.username}, '+password +sessions')
+    const user = await UserModel.findOne({ $or:[{username: req.body.username}, {email:req.body.email}]}, '+password +sessions')
     
     if( !user ) return handleResponse(res,{
         success: false,
