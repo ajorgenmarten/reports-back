@@ -1,6 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
+import cors from 'cors'
 import cookieParser from 'cookie-parser'
 
 dotenv.config()
@@ -10,6 +11,7 @@ import './database'
 import { COOKIE_PARSER_SECRET, PORT } from './config'
 import { router } from './libs/autoload'
 
+app.use(cors())
 app.use(cookieParser(COOKIE_PARSER_SECRET))
 app.use(express.urlencoded({extended:false}))
 app.use(express.json())
