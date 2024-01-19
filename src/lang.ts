@@ -30,6 +30,11 @@ export default {
                 activeOk: "La cuenta ha sido activada",
                 activeNotFound: "La cuenta no existe, por favor verifique sus credenciales.",
                 logoutOk: "Sesión cerrada.",
+            },
+            validators: {
+                breakRules: "Yo también puedo romper las reglas.",
+                exist: "No se ha recibido ",
+                notEmpty: " no puede estar vacío.",
             }
         },
         reports: {
