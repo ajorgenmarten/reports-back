@@ -11,8 +11,8 @@ import { handleResponse } from "../../libs/http"
 import lang from "../../lang"
 
 export const existUserWithUsername: RequestHandler = async (req, res, next) => {
-    const users = await UserModel.find({username: req.body.username})
-    if(users.length) return handleResponse(res,{ success: false,
+    const users = await UserModel.findOne({username: req.body.username})
+    if(users) return handleResponse(res,{ success: false,
                                             message: lang.services.auth.middlewares.existUserWithUsername,
                                             status: 400 })
     next()
@@ -20,8 +20,8 @@ export const existUserWithUsername: RequestHandler = async (req, res, next) => {
 
 
 export const existUserWithEmail: RequestHandler = async (req, res, next) => {
-    const users = await UserModel.find({email: req.body.email})
-    if(users.length) return handleResponse(res,{ success: false,
+    const users = await UserModel.findOne({email: req.body.email})
+    if(users) return handleResponse(res,{ success: false,
                                             message: lang.services.auth.middlewares.existUserWithEmail,
                                             status: 400 })
     next()
