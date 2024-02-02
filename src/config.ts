@@ -27,3 +27,4 @@ const MAILER_BASE_CONFIG = {
 }
 
 export const MAILER_CONFIG = {...MAILER_BASE_CONFIG, ... MAIL_ALL_TSL == "true" && { tls: { rejectUnauthorized: false } } }
+export const FRONTEND_URL = process.env.FRONTEND_URL as string

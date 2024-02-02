@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import { active, login, logout, refresh, register, resendCode } from "./controller";
-import { ActivateAccountValidator, BaseUserValidator, LoginValidator, ResendCodeValidator } from "./validator";
+import { active, forgot, login, logout, refresh, register, resendCode } from "./controller";
+import { ActivateAccountValidator, BaseUserValidator, LoginValidator, ResendCodeValidator, forgotValidator } from "./validator";
 import { existUserWithEmail, existUserWithUsername, isAuth } from "./middlewares";
 
 const router = Router()
@@ -25,5 +25,8 @@ router.delete('/logout', isAuth,
 
 router.get('/refresh', isAuth,
                        refresh)
+
+router.post('/forgot', forgotValidator,
+                        forgot)
 
 export { router }

@@ -77,3 +77,10 @@ export const accessTokenValidator = [
         .isJWT(),
     validate
 ]
+
+export const forgotValidator = [
+    body('username')
+        .exists()
+        .notEmpty(),
+    validate
+]

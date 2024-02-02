@@ -30,6 +30,8 @@ export default {
                 activeOk: "La cuenta ha sido activada",
                 activeNotFound: "La cuenta no existe, por favor verifique sus credenciales.",
                 logoutOk: "Sesión cerrada.",
+                forgotNotExistAccount: "Esta cuenta no se ha creado, por favor regístrese.",
+                forgotOk: "Se le ha enviado un correo para cambiar la contraseña.",
             },
             validators: {
                 breakRules: "Yo también puedo romper las reglas.",

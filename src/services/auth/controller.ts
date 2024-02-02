@@ -6,11 +6,11 @@ import { jwtDecodeMail, jwtSignAccess, jwtSignMail, jwtSignRefresh } from "../..
 import { isReady, loadMailTemplate, Mailer } from "../../libs/mailer";
 
 import { UserModel } from "./models";
+import { getSessionSecret } from "./helper";
 import { ActiveMailTokenPayload, RefreshTokenPayload, User } from "./types";
 
-import { MAILER_CONFIG } from "../../config";
+import { MAILER_CONFIG, FRONTEND_URL } from "../../config";
 import lang from "../../lang";
-import { getSessionSecret } from "./helper";
 import { handleResponse } from "../../libs/http";
 
 export const register: RequestHandler = async (req, res) => {
@@ -35,7 +35,8 @@ export const register: RequestHandler = async (req, res) => {
         to: userSaved.email,
         html: loadMailTemplate('active-user', {
             name: userSaved.name,
-            code: jwt
+            code: jwt,
+            "front-url": FRONTEND_URL
         })
     })
 
@@ -92,7 +93,8 @@ export const resendCode: RequestHandler = async (req, res) => {
         to: userAccount.email,
         html: loadMailTemplate('active-user', {
             name: userAccount.name,
-            code: jwt
+            code: jwt,
+            "front-url": FRONTEND_URL
         })
     })
 
@@ -154,4 +156,33 @@ export const refresh: RequestHandler = async (req, res) => {
     const secret = getSessionSecret(userAccount, req.body.accountSid) as string
     const accessToken = jwtSignAccess({ username: userAccount.username }, secret)
     return handleResponse(res, { success: true, data: {accessToken} })
+}
+
+export const forgot: RequestHandler = async (req, res) => {
+    const username = req.body.username
+    const user = await UserModel.findOne({ $or: [ { username }, { email: username } ] }, "+code")
+    if ( !user ) return handleResponse(res, {
+        success: false,
+        message: lang.services.auth.controllers.forgotNotExistAccount
+    })
+    
+    const code = randomUUID()
+    const jwt: string = jwtSignMail({ code })
+
+    user.code = code
+    Mailer.sendMail({
+        subject: "Cambiar contraseña",
+        from: `Reportes TIC <${MAILER_CONFIG.auth.user}>`,
+        to: user.email,
+        html: loadMailTemplate('change-password', {
+            name: user.name,
+            code: jwt,
+            "front-url": FRONTEND_URL
+        })
+    })
+    user.save()
+    return handleResponse( res, {
+        success: true,
+        message: lang.services.auth.controllers.forgotOk
+    })
 }
