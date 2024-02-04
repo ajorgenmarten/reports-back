@@ -4,7 +4,7 @@ import { jwtDecode, jwtDecodeRefresh } from "../../libs/jsonwebtoken"
 
 import { UserModel } from "./models"
 import { getSessionSecret } from "./helper"
-import { accessTokenValidator } from "./validator"
+import { AccessTokenValidator } from "./validator"
 import { AccessTokenPayload, RefreshTokenPayload, User } from "./types"
 
 import { handleResponse } from "../../libs/http"
@@ -91,5 +91,5 @@ export const can = () => {
         next()
 
     }
-    return [ ...accessTokenValidator, canHandler]
+    return [ ...AccessTokenValidator, canHandler]
 }

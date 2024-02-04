@@ -69,7 +69,7 @@ export const ResendCodeValidator = [
     validate
 ]
 
-export const accessTokenValidator = [
+export const AccessTokenValidator = [
     header('Authorization')
         .exists()
         .notEmpty()
@@ -78,9 +78,21 @@ export const accessTokenValidator = [
     validate
 ]
 
-export const forgotValidator = [
+export const ForgotValidator = [
     body('username')
         .exists()
         .notEmpty(),
+    validate
+]
+
+export const ChangePasswordValidator = [
+    body('code')
+        .exists()
+        .notEmpty()
+        .isJWT(),
+    body('password')
+        .exists()
+        .notEmpty()
+        .isLength({ min: 8 }),
     validate
 ]

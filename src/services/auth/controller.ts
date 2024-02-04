@@ -64,6 +64,7 @@ export const active: RequestHandler = async (req, res) => {
     })
 
     userAccount.status = true
+    userAccount.code = randomUUID()
     await userAccount.save()
     
     return handleResponse(res, {
@@ -184,5 +185,32 @@ export const forgot: RequestHandler = async (req, res) => {
     return handleResponse( res, {
         success: true,
         message: lang.services.auth.controllers.forgotOk
+    })
+}
+
+export const changePassword: RequestHandler = async (req, res) => {
+    const jwtVerify = jwtDecodeMail<ActiveMailTokenPayload>(req.body.code)
+    if ( !jwtVerify.success ) return handleResponse(res, {
+        success: false,
+        status: 403,
+        message: jwtVerify.errorMsg
+    })
+
+    const userAccount = await UserModel.findOne({ code: jwtVerify.payload?.code })
+    
+    if( !userAccount ) return handleResponse(res, { 
+        success: false,
+        message: lang.services.auth.controllers.activeNotFound,
+        status: 404,
+    })
+
+    userAccount.password = req.body.password
+    userAccount.code = randomUUID()
+    await userAccount.save()
+    
+    return handleResponse(res, {
+        success: true,
+        message: lang.services.auth.controllers.changePassword,
+        status: 200
     })
 }
