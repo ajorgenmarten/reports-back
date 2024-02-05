@@ -62,10 +62,9 @@ export const LoginValidator = [
 ]
 
 export const ResendCodeValidator = [
-    body('email')
+    body('username')
         .exists()
-        .notEmpty()
-        .isEmail(),
+        .notEmpty(),
     validate
 ]
 

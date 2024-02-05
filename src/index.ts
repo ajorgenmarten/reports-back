@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import morgan from 'morgan'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
+import './types'
 
 dotenv.config()
 const app = express()
@@ -19,8 +20,8 @@ app.use(morgan('dev'))
 
 app.use(router)
 
-app.get('/test', async (req, res) => {
-    res.send('ok')
+app.get('/ping', async (req, res) => {
+    res.send('pong')
 })
 
 app.listen(PORT, () => console.log('⚡ Server started...'))

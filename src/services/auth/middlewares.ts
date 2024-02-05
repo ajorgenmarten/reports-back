@@ -3,7 +3,7 @@ import { RequestHandler } from "express"
 import { jwtDecode, jwtDecodeRefresh } from "../../libs/jsonwebtoken"
 
 import { UserModel } from "./models"
-import { getSessionSecret } from "./helper"
+import { cleanAccessToken, getSessionSecret } from "./helper"
 import { AccessTokenValidator } from "./validator"
 import { AccessTokenPayload, RefreshTokenPayload, User } from "./types"
 
@@ -60,7 +60,7 @@ export const isAuth: RequestHandler = async (req, res, next) => {
         message: lang.services.auth.controllers.resendCodeNotFound
     })
 
-    req.body.accountSid = verifyJwtResult.payload?.sid
+    req.session = verifyJwtResult.payload?.sid
     req.user = userAccount
     next()
 }
@@ -72,8 +72,15 @@ export const can = () => {
     
     const canHandler: RequestHandler = (req, res, next) => {
         const authUser = req.user as User
-        const token = req.header('Authorization') as string
-        const secret = getSessionSecret(req.user as User, req.body.accountSid) as string
+        const token = cleanAccessToken( req.header('Authorization') )
+
+        if (!token) return handleResponse(res, {
+            success: false,
+            message: lang.libs.jsonwebtoken.invalidToken,
+            status: 400
+        })
+
+        const secret = getSessionSecret(req.user as User, req.session as string ) as string
         const verifyJwtResult = jwtDecode<AccessTokenPayload>(token, secret)
 
         if ( !verifyJwtResult.success ) return handleResponse(res,{

@@ -75,7 +75,7 @@ export const active: RequestHandler = async (req, res) => {
 }
 
 export const resendCode: RequestHandler = async (req, res) => {
-    const userAccount = await UserModel.findOne({email: req.body.email})
+    const userAccount = await UserModel.findOne({username: req.body.username})
     
     if( !userAccount ) return handleResponse(res, {
         success: false,
@@ -86,6 +86,7 @@ export const resendCode: RequestHandler = async (req, res) => {
     const code = randomUUID()
     const jwt: string = jwtSignMail({code})
 
+    userAccount.code = code
     userAccount.save()
 
     Mailer.sendMail({
@@ -202,6 +203,13 @@ export const changePassword: RequestHandler = async (req, res) => {
         success: false,
         message: lang.services.auth.controllers.activeNotFound,
         status: 404,
+    })
+
+    if(!userAccount.status) return handleResponse(res, {
+        success: false,
+        message: lang.services.auth.controllers.loginInactiveAccount,
+        data: { username: userAccount.username },
+        status: 403
     })
 
     userAccount.password = req.body.password
