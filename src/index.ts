@@ -18,11 +18,6 @@ app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 app.use(morgan('dev'))
 
-app.use((req, res, next) => {
-    console.log(JSON.stringify(req.cookies))
-    next()
-})
-
 app.use(router)
 
 app.get('/ping', async (req, res) => {
