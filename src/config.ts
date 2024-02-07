@@ -6,9 +6,6 @@ export const MODE = process.env.MODE
 export const JWT_SECRET_REFRESH=process.env.JWT_SECRET_REFRESH
 export const JWT_SECRET_MAIL=process.env.JWT_SECRET_MAIL
 
-// Configuracion de cookie-parser
-export const COOKIE_PARSER_SECRET=process.env.COOKIE_PARSER_SECRET
-
 // Configuraciones de correo
 export const MAIL_HOST = process.env.MAIL_HOST as string
 export const MAIL_PORT = parseInt( process.env.MAIL_PORT as string )

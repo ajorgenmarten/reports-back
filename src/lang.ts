@@ -14,7 +14,7 @@ export default {
             middlewares: {
                 existUserWithUsername: "Ya existe un usuario con ese nombre de usuario.",
                 existUserWithEmail: "Ya existe un usuario con ese correo.",
-                validateRefreshTokenSigned: "No tiene acceso a este recurso.",
+                validateRefreshToken: "No tiene acceso a este recurso.",
                 getAuthUserNotFound: "Su usuario no ha sido encontrado.",
                 canUsernamesNotMatch: "Hay algo mal aqui, yo también puedo romper las reglas.",
             },

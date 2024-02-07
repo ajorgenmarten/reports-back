@@ -28,13 +28,14 @@ export const existUserWithEmail: RequestHandler = async (req, res, next) => {
 }
 
 export const isAuth: RequestHandler = async (req, res, next) => {
-    if( !req.signedCookies.refreshToken ) return handleResponse(res,{
+    
+    if( !req.cookies.refreshToken ) return handleResponse(res,{
         success: false,
-        message: lang.services.auth.middlewares.validateRefreshTokenSigned,
+        message: lang.services.auth.middlewares.validateRefreshToken,
         status: 400,
     })
     
-    const verifyJwtResult = jwtDecodeRefresh<RefreshTokenPayload>(req.signedCookies.refreshToken)
+    const verifyJwtResult = jwtDecodeRefresh<RefreshTokenPayload>(req.cookies.refreshToken)
 
     if( !verifyJwtResult.success ) {
         if (verifyJwtResult.errorMsg == lang.libs.jsonwebtoken.expired) {

@@ -132,15 +132,15 @@ export const login: RequestHandler = async (req, res) => {
     const jwtAccess = jwtSignAccess({username: user.username}, sessionSecret)
     const jwtRefresh = jwtSignRefresh({username: user.username, sid: sessionId})
 
-    res.cookie('refreshToken', jwtRefresh, { httpOnly: true, maxAge: 1024 * 60 * 60 * 24 * 30, signed: true })
+    res.cookie('refreshToken', jwtRefresh, { maxAge: 1024 * 60 * 60 * 24 * 30, httpOnly: true })
 
     return handleResponse(res, { success: true, data: { accessToken: jwtAccess }, message: lang.services.auth.controllers.loginOk })
 }
 
 export const logout: RequestHandler = async (req, res) => {
     const user = req.user as User
-    // req.body.accountSid es el id de sesion que se obtiene en el middleware isAuth
-    const sid = req.body.accountSid
+    // req.session es el id de sesion que se obtiene en el middleware isAuth
+    const sid = req.session
     const userAccount = await UserModel.findOne({username: user.username}, '+sessions')
     const sessionIndex = userAccount?.sessions.findIndex(session => session.sid == sid)
     if ( sessionIndex != undefined ) {
