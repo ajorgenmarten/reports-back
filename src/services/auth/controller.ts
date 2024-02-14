@@ -155,7 +155,13 @@ export const logout: RequestHandler = async (req, res) => {
 export const refresh: RequestHandler = async (req, res) => {
     const userAccount = req.user as User
     // req.body.accountSid es el id de sesion que se obtiene en el middleware isAuth
-    const secret = getSessionSecret(userAccount, req.body.accountSid) as string
+    const secret = getSessionSecret(userAccount, req.session as string)
+    
+    if (!secret) return handleResponse(res, {
+        status: 403,
+        success: false,
+        message: lang.services.auth.controllers.refreshSidNotFound
+    })
     const accessToken = jwtSignAccess({ username: userAccount.username }, secret)
     return handleResponse(res, { success: true, data: {accessToken} })
 }

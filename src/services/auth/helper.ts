@@ -9,6 +9,6 @@ export const getSessionSecret = (user: User, sid: string) => user.sessions.find(
 
 export const cleanAccessToken = (token?: string) => {
     if (!token) return false
-    if (/^Bearer /.test(token)) return false
+    if (!/^Bearer /.test(token)) return false
     return token.replace('Bearer ', '')
 }

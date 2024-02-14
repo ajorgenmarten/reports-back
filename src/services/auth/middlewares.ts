@@ -73,7 +73,7 @@ export const can = () => {
     
     const canHandler: RequestHandler = (req, res, next) => {
         const authUser = req.user as User
-        const token = cleanAccessToken( req.header('Authorization') )
+        const token = cleanAccessToken( req.headers.authorization )
 
         if (!token) return handleResponse(res, {
             success: false,

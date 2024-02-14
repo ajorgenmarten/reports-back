@@ -69,11 +69,9 @@ export const ResendCodeValidator = [
 ]
 
 export const AccessTokenValidator = [
-    header('Authorization')
+    header('authorization')
         .exists()
-        .notEmpty()
-        .trim('Bearer ')
-        .isJWT(),
+        .notEmpty(),
     validate
 ]
 

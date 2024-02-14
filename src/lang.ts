@@ -32,7 +32,8 @@ export default {
                 logoutOk: "Sesión cerrada.",
                 forgotNotExistAccount: "Esta cuenta no se ha creado, por favor regístrese.",
                 forgotOk: "Se le ha enviado un correo para cambiar la contraseña.",
-                changePassword: "Contraseña cambiada."
+                changePassword: "Contraseña cambiada.",
+                refreshSidNotFound: "Al parecer a habia cerrado sesión.",
             },
             validators: {
                 breakRules: "Yo también puedo romper las reglas.",

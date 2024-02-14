@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import { active, changePassword, forgot, login, logout, refresh, register, resendCode } from "./controller";
 import { ActivateAccountValidator, BaseUserValidator, LoginValidator, ResendCodeValidator, ChangePasswordValidator, ForgotValidator } from "./validator";
-import { existUserWithEmail, existUserWithUsername, isAuth } from "./middlewares";
+import { can, existUserWithEmail, existUserWithUsername, isAuth } from "./middlewares";
 
 const router = Router()
 
@@ -21,6 +21,7 @@ router.post('/resend-code', ResendCodeValidator,
                             resendCode )
 
 router.delete('/logout', isAuth,
+                         can(),
                          logout )
 
 router.get('/refresh', isAuth,
