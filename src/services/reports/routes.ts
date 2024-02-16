@@ -1,7 +1,6 @@
 import { Router } from "express";
 
 import { create, getMyReports, getReport } from "./controller";
-import { verifySeed } from "./middlewares";
 import { getMyReportsValidator, getReportValidator, reportCreateValidator } from './validator';
 
 import { can, isAuth } from "../auth/middlewares";
@@ -11,7 +10,6 @@ const router = Router()
 router.use(isAuth, can())
 
 router.post('/create', reportCreateValidator,
-                       verifySeed,
                        create)
 
 router.get('/details/:id',  getReportValidator,

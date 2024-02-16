@@ -1,12 +1,16 @@
-import { ReportType } from "../services/reports/types";
-
-export const typeReports: ReportType[] = [
-    {
-        name: "Versat licencia",
-        codstr: "vrst_lic"
-    },
-    {
-        name: "Error de base de datos",
-        codstr: "vrst_db"
-    }
-]
+export const reportTypes = ['normal', 'versat_lic', 'versat_db'] as const
+export const modules = ['contabilidad',
+                        'costos', 
+                        'inventario', 
+                        'finanza',
+                        'activos fijos', 
+                        'facturacion', 
+                        'nominas', 
+                        'planificacion', 
+                        'gestion de informacion', 
+                        'auditoria', 
+                        'logistica', 
+                        'punto de ventas', 
+                        'diseñador de reportes', 
+                        'precios', 
+                        'sistema de produccion'] as const

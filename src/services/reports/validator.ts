@@ -1,5 +1,8 @@
 import { body, param, query } from "express-validator";
 import { validate } from "../../libs/check-express-validator-middlewares";
+import { ReportModel } from "./models";
+import lang from "../../lang";
+import { modules, reportTypes } from "../../mocks/reports";
 
 export const reportCreateValidator = [
     body('_id')
@@ -12,11 +15,26 @@ export const reportCreateValidator = [
         .exists()
         .notEmpty(),
     body('type')
-        .exists(),
-    body('seed')
-        .optional()
         .exists()
-        .notEmpty(),
+        .notEmpty()
+        .isIn([...reportTypes]),
+    body('seed')
+        .if((value, {req}) => req.body.type == reportTypes[1])
+        .exists()
+        .trim()
+        .notEmpty()
+        .custom(async (value) => {
+            const verifyLic = await ReportModel.findOne({seed: value})
+            if (verifyLic)
+                throw new Error(lang.services.reports.validators.seedHasSend)
+            else
+                return true
+        }),
+    body('module')
+        .if((value, {req}) => req.body.type == reportTypes[1])
+        .exists()
+        .notEmpty()
+        .isIn(modules),
     body('description')
         .optional()
         .exists()

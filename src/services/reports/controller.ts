@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 
 import { ReportModel } from "./models";
+import { Report } from "./types";
 
 import { User } from "../auth/types";
 
@@ -9,9 +10,10 @@ import { paginator } from "../../libs/database";
 import { handleResponse } from "../../libs/http";
 
 export const create: RequestHandler = async (req, res) => {
-    const report = new ReportModel(req.body)
+    let report = req.body as Report
     report.author = (req.user as User)._id
-    await report.save()
+    report = await ReportModel.create(report)
+
     return handleResponse(res, {
         success: true,
         data: report,

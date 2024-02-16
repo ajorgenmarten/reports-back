@@ -49,6 +49,9 @@ export default {
             controllers: {
                 getReportNotFound: "Reporte no encontrado, a lo mejor fue eliminado.",
                 createOk: "Su reporte ha sido enviado.",
+            },
+            validators: {
+                seedHasSend: "Esta semilla ya ha sido enviada."
             }
         }
     }
