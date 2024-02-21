@@ -158,7 +158,7 @@ export const refresh: RequestHandler = async (req, res) => {
     const secret = getSessionSecret(userAccount, req.session as string)
     
     if (!secret) return handleResponse(res, {
-        status: 403,
+        status: 401,
         success: false,
         message: lang.services.auth.controllers.refreshSidNotFound
     })
