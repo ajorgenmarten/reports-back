@@ -56,7 +56,6 @@ export const getReportValidator = [
 export const getMyReportsValidator = [
     query('page')
         .optional()
-        .exists()
         .notEmpty()
         .isNumeric(),
     validate

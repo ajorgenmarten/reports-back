@@ -32,7 +32,7 @@ export const isAuth: RequestHandler = async (req, res, next) => {
     if( !req.cookies.refreshToken ) return handleResponse(res,{
         success: false,
         message: lang.services.auth.middlewares.validateRefreshToken,
-        status: 400,
+        status: 401,
     })
     
     const verifyJwtResult = jwtDecodeRefresh<RefreshTokenPayload>(req.cookies.refreshToken)
@@ -78,7 +78,7 @@ export const can = () => {
         if (!token) return handleResponse(res, {
             success: false,
             message: lang.libs.jsonwebtoken.invalidToken,
-            status: 400
+            status: 401
         })
 
         const secret = getSessionSecret(req.user as User, req.session as string ) as string
