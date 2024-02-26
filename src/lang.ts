@@ -52,6 +52,9 @@ export default {
             },
             validators: {
                 seedHasSend: "Esta semilla ya ha sido enviada."
+            },
+            helper: {
+                getMyReportPageError: "Esta pagina no es valida." 
             }
         }
     }

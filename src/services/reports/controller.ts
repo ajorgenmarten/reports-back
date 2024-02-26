@@ -8,6 +8,7 @@ import { User } from "../auth/types";
 import lang from "../../lang";
 import { paginator } from "../../libs/database";
 import { handleResponse } from "../../libs/http";
+import { getMyReports } from "./helper";
 
 export const create: RequestHandler = async (req, res) => {
     let report = req.body as Report
@@ -27,13 +28,16 @@ export const getReport: RequestHandler = async (req, res) => {
         : handleResponse(res, { success: true, data: report })
 }
 
-export const getMyReports: RequestHandler = async (req, res) => {
+export const myReports: RequestHandler = async (req, res) => {
     const authUser = req.user as User
     try {
-        const pagination = await paginator(ReportModel, { author: authUser._id }, { page: req.query.page as string, population: ['author'] })
-        return handleResponse(res, { success: true, data: pagination })
+        // const pagination = await paginator(ReportModel, { author: authUser._id }, { page: req.query.page as string, population: ['author'] })
+        let page: any = req.query.page
+        if ( page ) page = parseInt(page as string)
+        const data = await getMyReports(authUser._id, page ?? undefined)
+        return handleResponse(res, { success: true, data })
     } catch (er: any) {
-        return handleResponse(res, { success: false, message: er, status: 500 })
+        return handleResponse(res, { success: false, message: er.message, status: 500 })
     }
 }
 

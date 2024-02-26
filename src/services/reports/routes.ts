@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { create, getMyReports, getReport } from "./controller";
+import { create, getReport, myReports } from "./controller";
 import { getMyReportsValidator, getReportValidator, reportCreateValidator } from './validator';
 
 import { can, isAuth } from "../auth/middlewares";
@@ -16,6 +16,6 @@ router.get('/details/:id',  getReportValidator,
                             getReport)
 
 router.get('/my-reports', getMyReportsValidator,
-                          getMyReports)
+                          myReports)
 
 export { router }
