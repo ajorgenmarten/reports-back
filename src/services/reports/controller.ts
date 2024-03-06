@@ -24,7 +24,7 @@ export const create: RequestHandler = async (req, res) => {
 
 export const getReport: RequestHandler = async (req, res) => {
     const report = await ReportModel.findOne({ _id: req.params.id }).populate('author')
-    return report ? handleResponse(res, { success: false, message: lang.services.reports.controllers.getReportNotFound, status: 404 })
+    return !report ? handleResponse(res, { success: false, message: lang.services.reports.controllers.getReportNotFound, status: 404 })
         : handleResponse(res, { success: true, data: report })
 }
 

@@ -7,6 +7,7 @@ export interface Report {
     title: string
     type: ReportType
     description?: string
+    department: String
     seed?: string
     module?: Module
     status: boolean

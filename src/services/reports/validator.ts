@@ -30,6 +30,10 @@ export const reportCreateValidator = [
             else
                 return true
         }),
+    body('department')
+        .if( (value, {req}) => req.body.type == reportTypes[1] )
+        .exists()
+        .notEmpty(),
     body('module')
         .if((value, {req}) => req.body.type == reportTypes[1])
         .exists()
@@ -37,8 +41,7 @@ export const reportCreateValidator = [
         .isIn(modules),
     body('description')
         .optional()
-        .exists()
-        .notEmpty(),
+        .exists(),
     body('status')
         .not()
         .exists(),
