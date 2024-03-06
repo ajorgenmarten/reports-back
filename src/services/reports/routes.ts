@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { create, getReport, myReports } from "./controller";
+import { complete, create, getReport, myReports, remove } from "./controller";
 import { getMyReportsValidator, getReportValidator, reportCreateValidator } from './validator';
 
 import { can, isAuth } from "../auth/middlewares";
@@ -17,5 +17,11 @@ router.get('/details/:id',  getReportValidator,
 
 router.get('/my-reports', getMyReportsValidator,
                           myReports)
+
+router.put('/complete/:id', getReportValidator,
+                            complete )
+
+router.delete('/delete/:id', getReportValidator,
+                             remove)
 
 export { router }

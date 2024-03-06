@@ -46,6 +46,28 @@ export const getAllReports: RequestHandler = async (req, res) => {
         const pagination = await paginator(ReportModel, {}, { page: req.query.page as string, population: ['author'] })
         return handleResponse(res, { success: true, data: pagination })
     } catch (er: any) {
-        return handleResponse(res, { success: false, message: er, status: 500 })
+        return handleResponse(res, { success: false, message: er.message, status: 500 })
+    }
+}
+
+export const complete: RequestHandler = async (req, res) => {
+    try {
+        const report = await ReportModel.findOne( { _id: req.params.id })
+        if (!report) return handleResponse(res, { success: false, message: lang.services.reports.controllers.getReportNotFound, status: 404 })
+        report.status = true
+        await report.save()
+        return handleResponse(res, { success: true, data: lang.services.reports.controllers.completeOk })
+    } catch (er: any) {
+        return handleResponse(res, { success: false, message: er.message, status: 500 })
+    }
+}
+
+export const remove: RequestHandler = async (req, res) => {
+    try {
+        const report = await ReportModel.deleteOne( { _id: req.params.id } )
+        if ( report.deletedCount ) return handleResponse(res, { success: true, message: lang.services.reports.controllers.deleteOk })
+        else return handleResponse( res, {success: true, message: lang.services.reports.controllers.hasDeleted })
+    } catch (er: any) {
+        return handleResponse( res, { success: false, message: er.message, status: 500 })
     }
 }
