@@ -9,6 +9,7 @@ export interface User {
     code: string
     status: boolean
     sessions: Session[]
+    role: "user" | "admin"
     checkPassword: (password: string) => boolean
 }
 

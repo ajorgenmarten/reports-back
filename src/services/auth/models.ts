@@ -20,7 +20,8 @@ const userSchema = new Schema<User>({
     password:{type: SchemaTypes.String, required: true, select: false},
     status: {type: SchemaTypes.Boolean, require: true, default: false},
     code: {type: SchemaTypes.String, select: false },
-    sessions: {type:  [sessionSchema], select: false }
+    sessions: {type:  [sessionSchema], select: false },
+    role: {type: SchemaTypes.String}
 }, {
     versionKey: false,
     timestamps: true

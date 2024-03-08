@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { active, changePassword, forgot, login, logout, refresh, register, resendCode } from "./controller";
+import { active, changePassword, forgot, login, logout, me, refresh, register, resendCode } from "./controller";
 import { ActivateAccountValidator, BaseUserValidator, LoginValidator, ResendCodeValidator, ChangePasswordValidator, ForgotValidator } from "./validator";
 import { can, existUserWithEmail, existUserWithUsername, isAuth } from "./middlewares";
 
@@ -32,5 +32,7 @@ router.post('/forgot', ForgotValidator,
 
 router.post('/change-password', ChangePasswordValidator,
                                 changePassword)
+
+router.get('/me', isAuth, can(), me)
 
 export { router }

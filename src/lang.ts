@@ -17,6 +17,7 @@ export default {
                 validateRefreshToken: "No tiene acceso a este recurso.",
                 getAuthUserNotFound: "Su usuario no ha sido encontrado.",
                 canUsernamesNotMatch: "Hay algo mal aqui, yo también puedo romper las reglas.",
+                dontCanFollow: "No puede acceder porque no tiene los privilegoios necesarios.",
             },
             controllers: {
                 register: "Se ha enviado un mail a su correo, por favor vaya a activar su usuario.",

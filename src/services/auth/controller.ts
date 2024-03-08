@@ -26,7 +26,8 @@ export const register: RequestHandler = async (req, res) => {
     const jwt: string = jwtSignMail({ code })
 
     //registrar el usuario
-    const userSaved = await UserModel.create({ ...req.body, code })
+    const role = "user"
+    const userSaved = await UserModel.create({ ...req.body, code, role })
 
     //mandar correo de activacion
     Mailer.sendMail({
@@ -228,3 +229,8 @@ export const changePassword: RequestHandler = async (req, res) => {
         status: 200
     })
 }
+
+export const me: RequestHandler = (req, res) => {
+    const { name, username, email, role } = req.user as User
+    handleResponse(res, { success: true, data: { name, username, email, role } })
+} 

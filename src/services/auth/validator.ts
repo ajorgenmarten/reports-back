@@ -40,6 +40,10 @@ export const BaseUserValidator = [
         .not()
         .exists()
         .withMessage(lang.services.auth.validators.breakRules),
+    body('role')
+        .not()
+        .exists()
+        .withMessage(lang.services.auth.validators.breakRules),
     validate
 ]
 

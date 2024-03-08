@@ -9,6 +9,7 @@ import { AccessTokenPayload, RefreshTokenPayload, User } from "./types"
 
 import { handleResponse } from "../../libs/http"
 import lang from "../../lang"
+import authRoutes from '../../mocks/auhtroutes'
 
 export const existUserWithUsername: RequestHandler = async (req, res, next) => {
     const users = await UserModel.findOne({username: req.body.username})
@@ -73,6 +74,15 @@ export const can = () => {
     
     const canHandler: RequestHandler = (req, res, next) => {
         const authUser = req.user as User
+        
+        const follow = canFollow(req.originalUrl, authUser.role)
+        
+        if (!follow) return handleResponse(res, {
+            success: false,
+            message: lang.services.auth.middlewares.dontCanFollow,
+            status: 403
+        })
+
         const token = cleanAccessToken( req.headers.authorization )
 
         if (!token) return handleResponse(res, {
@@ -100,4 +110,16 @@ export const can = () => {
 
     }
     return [ ...AccessTokenValidator, canHandler]
+}
+
+const canFollow = (path: string, role: User['role']) => {
+    path = removeParams(path)
+    const route = authRoutes.find(authRoute => authRoute.path == path)
+    if ( !route ) return true
+    if ( route.roles.includes(role) ) return true
+    return false
+}
+
+const removeParams = (path: string) => {
+    return path.split('?')[0]
 }
