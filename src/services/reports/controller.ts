@@ -6,9 +6,8 @@ import { Report } from "./types";
 import { User } from "../auth/types";
 
 import lang from "../../lang";
-import { paginator } from "../../libs/database";
 import { handleResponse } from "../../libs/http";
-import { getMyReports } from "./helper";
+import { getAllReports, getMyReports } from "./helper";
 
 export const create: RequestHandler = async (req, res) => {
     let report = req.body as Report
@@ -41,15 +40,6 @@ export const myReports: RequestHandler = async (req, res) => {
     }
 }
 
-export const getAllReports: RequestHandler = async (req, res) => {
-    try {
-        const pagination = await paginator(ReportModel, {}, { page: req.query.page as string, population: ['author'] })
-        return handleResponse(res, { success: true, data: pagination })
-    } catch (er: any) {
-        return handleResponse(res, { success: false, message: er.message, status: 500 })
-    }
-}
-
 export const complete: RequestHandler = async (req, res) => {
     try {
         const report = await ReportModel.findOne( { _id: req.params.id })
@@ -69,5 +59,16 @@ export const remove: RequestHandler = async (req, res) => {
         else return handleResponse( res, {success: true, message: lang.services.reports.controllers.hasDeleted })
     } catch (er: any) {
         return handleResponse( res, { success: false, message: er.message, status: 500 })
+    }
+}
+
+export const all: RequestHandler = async (req, res) => {
+    try {
+        let page: any = req.query.page
+        if ( page ) page = parseInt(page as string)
+        const data = await getAllReports(page ?? undefined)
+        return handleResponse(res, { success: true, data })
+    } catch (er: any) {
+        return handleResponse(res, { success: false, message: er.message, status: 500 })
     }
 }

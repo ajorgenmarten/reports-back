@@ -59,7 +59,7 @@ export const getReportValidator = [
     validate
 ]
 
-export const getMyReportsValidator = [
+export const validatePage = [
     query('page')
         .optional()
         .notEmpty()
