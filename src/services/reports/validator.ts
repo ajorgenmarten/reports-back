@@ -45,6 +45,9 @@ export const reportCreateValidator = [
     body('status')
         .not()
         .exists(),
+    body('solution')
+        .not()
+        .exists(),
     validate
 ]
 

@@ -9,6 +9,7 @@ const reportSchema = new Schema<Report>({
     title: SchemaTypes.String,
     type: SchemaTypes.String,
     status: {type: SchemaTypes.Boolean, default: false},
+    solution: {type: SchemaTypes.String, default: ''}, 
     module: SchemaTypes.String
 }, {
     versionKey: false,

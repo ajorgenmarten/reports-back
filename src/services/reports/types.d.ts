@@ -11,6 +11,7 @@ export interface Report {
     seed?: string
     module?: Module
     status: boolean
+    solution: string
 }
 
 export type Module =  (typeof modules)[keyof typeof modules]
