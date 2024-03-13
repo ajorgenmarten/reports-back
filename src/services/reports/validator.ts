@@ -66,3 +66,10 @@ export const validatePage = [
         .isNumeric(),
     validate
 ]
+
+export const solutionValidator = [
+    body('solution')
+        .exists()
+        .notEmpty(),
+    validate
+]

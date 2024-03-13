@@ -72,3 +72,19 @@ export const all: RequestHandler = async (req, res) => {
         return handleResponse(res, { success: false, message: er.message, status: 500 })
     }
 }
+
+export const solution: RequestHandler = async (req, res) => {
+    try {
+        const report = await ReportModel.findOne( { _id: req.params.id })
+        if ( !report ) return handleResponse(res, {
+            success: false,
+            message: lang.services.reports.controllers.getReportNotFound
+        })
+        report.solution = req.body.solution
+        report.status = true
+        await report.save()
+        return handleResponse(res, { success: true, message: lang.services.reports.controllers.reportSolved })
+    } catch (er: any) {
+        return handleResponse(res, { success: false, message: er.message, status: 500 })
+    }
+}

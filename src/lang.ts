@@ -28,7 +28,7 @@ export default {
                 loginInactiveAccount: "Su cuenta no ha sido activada aun.",
                 loginInvalidUsername: "Credenciales incorrectas.",
                 loginInvalidPassword: "Credenciales incorrectas.",
-                activeOk: "La cuenta ha sido activada",
+                activeOk: "La cuenta ha sido activada.",
                 activeNotFound: "La cuenta no existe, por favor verifique sus credenciales.",
                 logoutOk: "Sesión cerrada.",
                 forgotNotExistAccount: "Esta cuenta no se ha creado, por favor regístrese.",
@@ -38,21 +38,21 @@ export default {
             },
             validators: {
                 breakRules: "Yo también puedo romper las reglas.",
-                exist: "No se ha recibido ",
+                exist: "No se ha recibido.",
                 notEmpty: " no puede estar vacío.",
             }
         },
         reports: {
             middlewares: {
-                verifySeedNotSend: "Debe mandar la semilla.",
-                verifySeedNotMatch: "Este tipo de reporte no está registrado."
+                isNotMine: "Este recurso no es suyo.",
             },
             controllers: {
                 getReportNotFound: "Reporte no encontrado, a lo mejor fue eliminado.",
                 createOk: "Su reporte ha sido enviado.",
                 completeOk: "El reporte a sido completado.",
                 deleteOk: "El reporte fue eliminado satisfactoriamente.",
-                hasDeleted: "Al parecer el reporte ha sido eliminado anteriormente",
+                hasDeleted: "Al parecer el reporte ha sido eliminado anteriormente.",
+                reportSolved: "El reporte ha sido solucionado.",
             },
             validators: {
                 seedHasSend: "Esta semilla ya ha sido enviada."
