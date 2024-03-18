@@ -8,11 +8,14 @@ import { User } from "../auth/types";
 import lang from "../../lang";
 import { handleResponse } from "../../libs/http";
 import { getAllReports, getMyReports } from "./helper";
+import { notifyToAdmins } from "../webpush/helper";
 
 export const create: RequestHandler = async (req, res) => {
     let report = req.body as Report
     report.author = (req.user as User)._id
     report = await ReportModel.create(report)
+
+    await notifyToAdmins(req)
 
     return handleResponse(res, {
         success: true,

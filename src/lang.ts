@@ -60,6 +60,12 @@ export default {
             helper: {
                 getMyReportPageError: "Esta pagina no es valida." 
             }
+        },
+        webpush: {
+            controllers: {
+                deviceWasAdded: "El dispositivo fue agregado",
+                deviceAdded: "El dispositivo ha sido agregado para recibir notificaciones push"
+            }
         }
     }
 }

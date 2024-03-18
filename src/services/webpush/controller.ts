@@ -1,6 +1,26 @@
 import { RequestHandler } from "express";
-import webpush from "../../webpush";
+import { PushDeviceModel } from "./models";
+import { handleResponse } from "../../libs/http";
+import lang from "../../lang";
 
 export const subscription: RequestHandler = async (req, res) => {
-    await webpush.sendNotification(req.body, JSON.stringify({ message: "Hola, bienvenido a reportes thaba" }))
+    const pushInfo = req.body
+    const exist = await PushDeviceModel.findOne({ 'info.endpoint': pushInfo.endpoint })
+
+    if ( exist ) {
+        return handleResponse(res, {
+            success: true,
+            message: lang.services.webpush.controllers.deviceWasAdded
+        })
+    }
+
+    await PushDeviceModel.create({
+        user: req.user?._id,
+        info: pushInfo
+    })
+
+    return handleResponse(res, {
+        success: false,
+        message: lang.services.webpush.controllers.deviceAdded
+    })
 }
