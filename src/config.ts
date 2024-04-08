@@ -28,3 +28,5 @@ export const FRONTEND_URL = process.env.FRONTEND_URL as string
 
 export const WEBPUSH_PUBLIC_KEY = process.env.WEBPUSH_PUBLIC_KEY as string
 export const WEBPUSH_PRIVATE_KEY = process.env.WEBPUSH_PRIVATE_KEY as string
+
+export const ORIGINS = (process.env.ORIGINS as string).split(' ')

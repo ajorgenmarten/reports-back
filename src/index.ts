@@ -9,15 +9,19 @@ dotenv.config()
 const app = express()
 
 import './database'
-import { FRONTEND_URL, PORT } from './config'
+import { PORT } from './config'
 import { router } from './libs/autoload'
+import { handleCors } from './cors'
+import { isAuthExperimental, requireAuth } from './services/auth/middlewares'
 
-app.use(cors({ origin: FRONTEND_URL, credentials: true }))
+app.use(cors({ origin: handleCors, credentials: true }))
 app.use(cookieParser())
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 app.use(morgan('dev'))
 
+app.use(isAuthExperimental)
+app.use(requireAuth)
 app.use(router)
 
 app.get('/ping', async (req, res) => {

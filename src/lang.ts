@@ -67,5 +67,8 @@ export default {
                 deviceAdded: "El dispositivo ha sido agregado para recibir notificaciones push"
             }
         }
+    },
+    cors: {
+        deny: "No permitido por cors."
     }
 }

@@ -123,3 +123,49 @@ const canFollow = (path: string, role: User['role']) => {
 const removeParams = (path: string) => {
     return path.split('?')[0]
 }
+
+
+
+
+
+//EN ESTA PARTE ESTOY CREANDO NUEVAS FUNCIONALIDADES PARA LA AUTENTICACION
+//LA IDEA ES PONER UN MIDDLEWARE GENERAL QUE ESTABLEZCA SI LOS USUARIOS ESTAN LOGUEADOS O NO
+
+export const isAuthExperimental: RequestHandler = async (req, res, next) => {
+    
+    req.isAuth = false
+
+    if ( !req.cookies.refreshToken ) {
+        return next()
+    }
+    
+    const verifyResult = jwtDecodeRefresh<RefreshTokenPayload>(req.cookies.refreshToken)
+    
+    if ( !verifyResult.success ) {
+        if (verifyResult.errorMsg == lang.libs.jsonwebtoken.expired) {
+            res.clearCookie('refreshToken')
+        }
+        return next()
+    }
+
+    const userAccount = await UserModel.findOne({username: verifyResult.payload?.username}, '+sessions +sessions.secret') 
+
+    if ( !userAccount ) {
+        return next()
+    }
+
+    if ( !userAccount.status ) {
+        return next()
+    }
+
+    req.isAuth = true
+    req.session = verifyResult.payload?.sid
+    req.user = userAccount
+    next()
+}
+
+export const requireAuth: RequestHandler = async (req, res, next) => {
+    if ( req.isAuth ) 
+        return next()
+    return next()
+}
