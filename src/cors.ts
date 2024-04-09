@@ -7,5 +7,5 @@ export const handleCors: CorsOptions['origin'] = function( origin, callback ) {
     if ( ORIGINS.includes( requestOrigin ) )
         callback(null, true)
     else
-        callback(new Error(lang.cors.deny))
+        callback(new Error(lang.cors.deny + ` (${requestOrigin})`))
 }
