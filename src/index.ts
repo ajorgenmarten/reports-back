@@ -12,7 +12,7 @@ import './database'
 import { PORT } from './config'
 import { router } from './libs/autoload'
 import { handleCors } from './cors'
-import { isAuthExperimental, requireAuth } from './services/auth/middlewares'
+import { isAuth, requireAuth } from './services/auth/middlewares'
 
 app.use(cors({ origin: handleCors, credentials: true }))
 app.use(cookieParser())
@@ -20,8 +20,7 @@ app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 app.use(morgan('dev'))
 
-app.use(isAuthExperimental)
-app.use(requireAuth)
+app.use(isAuth)
 app.use(router)
 
 app.get('/ping', async (req, res) => {

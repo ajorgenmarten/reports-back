@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import { active, changePassword, forgot, login, logout, me, refresh, register, resendCode } from "./controller";
 import { ActivateAccountValidator, BaseUserValidator, LoginValidator, ResendCodeValidator, ChangePasswordValidator, ForgotValidator } from "./validator";
-import { can, existUserWithEmail, existUserWithUsername, isAuth } from "./middlewares";
+import { can, existUserWithEmail, existUserWithUsername, requireAuth } from "./middlewares";
 
 const router = Router()
 
@@ -20,11 +20,11 @@ router.post('/login', LoginValidator,
 router.post('/resend-code', ResendCodeValidator,
                             resendCode )
 
-router.delete('/logout', isAuth,
+router.delete('/logout', requireAuth,
                          can(),
                          logout )
 
-router.get('/refresh', isAuth,
+router.get('/refresh', requireAuth,
                        refresh)
 
 router.post('/forgot', ForgotValidator,
@@ -33,6 +33,6 @@ router.post('/forgot', ForgotValidator,
 router.post('/change-password', ChangePasswordValidator,
                                 changePassword)
 
-router.get('/me', isAuth, can(), me)
+router.get('/me', requireAuth, can(), me)
 
 export { router }
