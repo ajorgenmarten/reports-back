@@ -21,7 +21,6 @@ app.use(express.json())
 app.use(morgan('dev'))
 
 app.use(isAuthExperimental)
-app.use(requireAuth)
 app.use(router)
 
 app.get('/ping', async (req, res) => {

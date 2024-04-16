@@ -20,6 +20,8 @@ export const register: RequestHandler = async (req, res) => {
         message: lang.services.auth.controllers.registerMailError,
         status: 500
     })
+    
+    req.body.username = req.body.username.toLowerCase()
 
     //generar el token de verificacion
     const code = randomUUID()

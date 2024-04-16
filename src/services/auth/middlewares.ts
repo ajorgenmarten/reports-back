@@ -167,5 +167,9 @@ export const isAuthExperimental: RequestHandler = async (req, res, next) => {
 export const requireAuth: RequestHandler = async (req, res, next) => {
     if ( req.isAuth ) 
         return next()
-    return next()
+    return handleResponse(res, {
+        success: false,
+        message: lang.services.auth.middlewares.noAuth,
+        status: 401
+    })
 }
