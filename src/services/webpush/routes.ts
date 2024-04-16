@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { subscription } from "./controller";
-import { can, isAuth } from "../auth/middlewares";
+import { can, requireAuth } from "../auth/middlewares";
 const router = Router()
 
-router.use( isAuth, can() )
+router.use( requireAuth, can() )
 
 router.post('/subscribe', subscription)
 

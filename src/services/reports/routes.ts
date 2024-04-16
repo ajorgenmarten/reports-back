@@ -3,12 +3,12 @@ import { Router } from "express";
 import { all, complete, create, getReport, myReports, remove, solution } from "./controller";
 import { validatePage, getReportValidator, reportCreateValidator, solutionValidator } from './validator';
 
-import { can, isAuth } from "../auth/middlewares";
+import { can, requireAuth } from "../auth/middlewares";
 import { itsMine } from "./middlewares";
 
 const router = Router()
 
-router.use(isAuth, can())
+router.use(requireAuth, can())
 
 router.post('/create', reportCreateValidator,
                        create)

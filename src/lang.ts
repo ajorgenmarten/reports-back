@@ -19,7 +19,7 @@ export default {
                 canUsernamesNotMatch: "Hay algo mal aqui, yo también puedo romper las reglas.",
                 dontCanFollow: "No puede acceder porque no tiene los privilegoios necesarios.",
 
-                noAuth: "No está autorizado, debe iniciar sesión."
+                userNoAuth: "No está autenticado.",
             },
             controllers: {
                 register: "Se ha enviado un mail a su correo, por favor vaya a activar su usuario.",

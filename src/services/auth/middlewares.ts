@@ -28,45 +28,6 @@ export const existUserWithEmail: RequestHandler = async (req, res, next) => {
     next()
 }
 
-export const isAuth: RequestHandler = async (req, res, next) => {
-    
-    if( !req.cookies.refreshToken ) return handleResponse(res,{
-        success: false,
-        message: lang.services.auth.middlewares.validateRefreshToken,
-        status: 401,
-    })
-    
-    const verifyJwtResult = jwtDecodeRefresh<RefreshTokenPayload>(req.cookies.refreshToken)
-
-    if( !verifyJwtResult.success ) {
-        if (verifyJwtResult.errorMsg == lang.libs.jsonwebtoken.expired) {
-            res.clearCookie('refreshToken')
-        }
-        return handleResponse(res,{
-            success: false,
-            message: verifyJwtResult.errorMsg,
-            status: 401
-        })
-    }
-
-    const userAccount = await UserModel.findOne({username: verifyJwtResult.payload?.username}, '+sessions +sessions.secret')
-
-    if ( !userAccount ) return handleResponse(res,{
-        success: false,
-        message: lang.services.auth.middlewares.getAuthUserNotFound,
-        status: 401,
-    })
-
-    if ( !userAccount.status ) return handleResponse(res,{
-        success: false,
-        message: lang.services.auth.controllers.resendCodeNotFound
-    })
-
-    req.session = verifyJwtResult.payload?.sid
-    req.user = userAccount
-    next()
-}
-
 /**
  * Este middleware debe ser pasado a las rutas como invocacion [con los paréntesis al final "()"]
  */
@@ -125,13 +86,7 @@ const removeParams = (path: string) => {
 }
 
 
-
-
-
-//EN ESTA PARTE ESTOY CREANDO NUEVAS FUNCIONALIDADES PARA LA AUTENTICACION
-//LA IDEA ES PONER UN MIDDLEWARE GENERAL QUE ESTABLEZCA SI LOS USUARIOS ESTAN LOGUEADOS O NO
-
-export const isAuthExperimental: RequestHandler = async (req, res, next) => {
+export const isAuth: RequestHandler = async (req, res, next) => {
     
     req.isAuth = false
 
@@ -165,11 +120,11 @@ export const isAuthExperimental: RequestHandler = async (req, res, next) => {
 }
 
 export const requireAuth: RequestHandler = async (req, res, next) => {
-    if ( req.isAuth ) 
-        return next()
-    return handleResponse(res, {
-        success: false,
-        message: lang.services.auth.middlewares.noAuth,
-        status: 401
-    })
+    if ( !req.isAuth ) 
+        return handleResponse(res, {
+            success: false,
+            message: lang.services.auth.middlewares.userNoAuth,
+            status: 401
+        })
+    return next()
 }
