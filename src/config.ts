@@ -1,6 +1,6 @@
 export const DB = process.env.DB
+export const DB_NAME = process.env.DB_NAME
 export const PORT = process.env.PORT
-export const MODE = process.env.MODE
 
 // Configuracion jsonwebtoken
 export const JWT_SECRET_REFRESH=process.env.JWT_SECRET_REFRESH
